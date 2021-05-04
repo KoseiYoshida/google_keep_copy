@@ -33,7 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           Expanded(
             child: Container(
-              color: Colors.grey,
+              color: Colors.white,
               child: Column(
                 children:
                     contents.map((e) => Text('${e.title}-${e.text}')).toList(),
