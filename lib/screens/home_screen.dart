@@ -84,7 +84,9 @@ class _HomeScreenState extends State<HomeScreen> {
           size: 45,
           color: Colors.red,
         ),
-        onPressed: () {},
+        onPressed: () {
+          Navigator.pushNamed(context, '/add');
+        },
       ),
     );
   }
