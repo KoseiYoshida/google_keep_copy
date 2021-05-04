@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:goggle_keep_copy/models/content.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -6,6 +7,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  List<Content> contents = [];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,7 +34,10 @@ class _HomeScreenState extends State<HomeScreen> {
           Expanded(
             child: Container(
               color: Colors.grey,
-              child: Text("body"),
+              child: Column(
+                children:
+                    contents.map((e) => Text('${e.title}-${e.text}')).toList(),
+              ),
             ),
           ),
         ],
@@ -84,8 +90,17 @@ class _HomeScreenState extends State<HomeScreen> {
           size: 45,
           color: Colors.red,
         ),
-        onPressed: () {
-          Navigator.pushNamed(context, '/add');
+        onPressed: () async {
+          var value = await Navigator.pushNamed(context, '/add');
+          if (value != null) {
+            if (!(value is Content)) {
+              throw 'Invalid type variable passed from route /add. Passed type:${value.runtimeType}';
+            }
+            var content = value as Content;
+            setState(() {
+              this.contents.add(content);
+            });
+          }
         },
       ),
     );

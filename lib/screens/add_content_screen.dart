@@ -1,8 +1,13 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:goggle_keep_copy/models/content.dart';
+import 'package:goggle_keep_copy/utils/string_extension.dart';
 
 class AddContentScreen extends StatelessWidget {
+  final TextEditingController titleTextController = TextEditingController();
+  final TextEditingController memoTextController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -10,6 +15,26 @@ class AddContentScreen extends StatelessWidget {
         backgroundColor: Colors.white,
         iconTheme: IconThemeData(),
         elevation: 0,
+        leading: IconButton(
+          icon: BackButtonIcon(),
+          onPressed: () {
+            var title = titleTextController.text;
+            var memo = memoTextController.text;
+            if (titleTextController.text.isBlank &&
+                memoTextController.text.isBlank) {
+              Navigator.pop(context);
+            } else {
+              var content = Content(
+                  title: title.isNotBlank ? title : '',
+                  text: memo.isNotBlank ? memo : '');
+              Navigator.pop(
+                context,
+                content,
+              );
+            }
+          },
+          tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+        ),
         actions: [
           IconButton(
             icon: Icon(Icons.push_pin_outlined),
@@ -34,6 +59,7 @@ class AddContentScreen extends StatelessWidget {
         child: Column(
           children: [
             TextField(
+              controller: titleTextController,
               cursorColor: Colors.black,
               cursorWidth: 1,
               style: TextStyle(
@@ -45,6 +71,7 @@ class AddContentScreen extends StatelessWidget {
               ),
             ),
             TextField(
+              controller: memoTextController,
               cursorColor: Colors.black,
               cursorWidth: 1,
               decoration: InputDecoration(
