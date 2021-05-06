@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:goggle_keep_copy/components/content_tile.dart';
 import 'package:goggle_keep_copy/models/content.dart';
 
 class HomeScreen extends StatefulWidget {
