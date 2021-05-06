@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:goggle_keep_copy/components/content_tile.dart';
 import 'package:goggle_keep_copy/models/content.dart';
+import 'package:goggle_keep_copy/screens/edit_content_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -40,7 +41,28 @@ class _HomeScreenState extends State<HomeScreen> {
                 mainAxisSpacing: 10,
               ),
               itemBuilder: (context, index) {
-                return ContentTile(content: contents[index]);
+                final tile = ContentTile(content: contents[index]);
+                return GestureDetector(
+                  child: tile,
+                  onTap: () async {
+                    var editedContent = await Navigator.push<Content>(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) {
+                          return EditContentScreen(
+                            content: contents[index],
+                          );
+                        },
+                      ),
+                    );
+
+                    if (editedContent != null) {
+                      setState(() {
+                        this.contents[index] = editedContent;
+                      });
+                    }
+                  },
+                );
               },
               itemCount: contents.length,
             ),
