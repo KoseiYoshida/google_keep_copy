@@ -16,15 +16,23 @@ class ContentTile extends StatelessWidget {
         border: Border.all(),
         borderRadius: BorderRadius.circular(10),
       ),
-      child: Column(
-        children: [
-          Text(
-            content.title,
-          ),
-          Text(
-            content.text,
-          ),
-        ],
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              content.title,
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(
+              height: 5,
+            ),
+            Text(
+              content.text,
+            ),
+          ],
+        ),
       ),
     );
   }
