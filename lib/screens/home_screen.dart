@@ -32,12 +32,16 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           Expanded(
-            child: Container(
-              color: Colors.white,
-              child: Column(
-                children:
-                    contents.map((e) => Text('${e.title}-${e.text}')).toList(),
+            child: GridView.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
               ),
+              itemBuilder: (context, index) {
+                return ContentTile(content: contents[index]);
+              },
+              itemCount: contents.length,
             ),
           ),
         ],
