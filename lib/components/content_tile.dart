@@ -21,6 +21,11 @@ class ContentTile extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            if (content.imageProvider != null)
+              Image(
+                image: content.imageProvider,
+                height: 50,
+              ),
             Text(
               content.title,
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
