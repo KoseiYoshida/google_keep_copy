@@ -5,17 +5,21 @@ import 'package:goggle_keep_copy/models/content.dart';
 import 'package:goggle_keep_copy/services/image_file_loader.dart';
 import 'package:goggle_keep_copy/utils/string_extension.dart';
 
-class EditContentScreen extends StatelessWidget {
+class EditContentScreen extends StatefulWidget {
   EditContentScreen({this.content}) {
     titleTextController.text = content.title;
     memoTextController.text = content.text;
   }
 
   final Content content;
-
   final TextEditingController titleTextController = TextEditingController();
   final TextEditingController memoTextController = TextEditingController();
 
+  @override
+  _EditContentScreenState createState() => _EditContentScreenState();
+}
+
+class _EditContentScreenState extends State<EditContentScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,15 +29,15 @@ class EditContentScreen extends StatelessWidget {
         leading: IconButton(
           icon: BackButtonIcon(),
           onPressed: () {
-            var title = titleTextController.text;
-            var memo = memoTextController.text;
+            var title = widget.titleTextController.text;
+            var memo = widget.memoTextController.text;
 
-            content.title = title.isNotBlank ? title : '';
-            content.text = memo.isNotBlank ? memo : '';
+            widget.content.title = title.isNotBlank ? title : '';
+            widget.content.text = memo.isNotBlank ? memo : '';
 
             Navigator.pop(
               context,
-              content,
+              widget.content,
             );
           },
           tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
@@ -61,8 +65,10 @@ class EditContentScreen extends StatelessWidget {
         ),
         child: Column(
           children: [
+            if (widget.content.imageProvider != null)
+              Image(image: widget.content.imageProvider),
             TextField(
-              controller: titleTextController,
+              controller: widget.titleTextController,
               cursorColor: Colors.black,
               cursorWidth: 1,
               style: TextStyle(
@@ -74,7 +80,7 @@ class EditContentScreen extends StatelessWidget {
               ),
             ),
             TextField(
-              controller: memoTextController,
+              controller: widget.memoTextController,
               cursorColor: Colors.black,
               cursorWidth: 1,
               decoration: InputDecoration(
@@ -98,7 +104,18 @@ class EditContentScreen extends StatelessWidget {
                 showModalBottomSheet(
                   context: context,
                   builder: (context) {
-                    return ContentSelectionSheet(content);
+                    return ContentSelectionSheet(
+                      content: widget.content,
+                      onSelectImage: (imageProvider) {
+                        if (imageProvider == null) {
+                          throw ArgumentError.notNull(imageProvider.toString());
+                        }
+
+                        setState(() {
+                          widget.content.imageProvider = imageProvider;
+                        });
+                      },
+                    );
                   },
                 );
               },
@@ -124,9 +141,10 @@ class EditContentScreen extends StatelessWidget {
 
 class ContentSelectionSheet extends StatelessWidget {
   final Content content;
+  final Function(ImageProvider) onSelectImage;
 
   // TODO: Contentを直接渡さない方式にする。
-  ContentSelectionSheet(this.content);
+  ContentSelectionSheet({this.content, this.onSelectImage});
 
   @override
   Widget build(BuildContext context) {
@@ -144,7 +162,7 @@ class ContentSelectionSheet extends StatelessWidget {
             var loader = ImageFileLoader();
             var file = await loader.getImageFromStorage();
             if (file != null) {
-              content.imageProvider = FileImage(file);
+              onSelectImage(FileImage(file));
             }
           },
         ),
