@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -57,39 +58,42 @@ class _EditContentScreenState extends State<EditContentScreen> {
           ),
         ],
       ),
-      body: Container(
-        color: Colors.white,
-        padding: EdgeInsets.symmetric(
-          vertical: 5,
-          horizontal: 10,
-        ),
-        child: Column(
-          children: [
-            if (widget.content.imageProvider != null)
-              Image(image: widget.content.imageProvider),
-            TextField(
-              controller: widget.titleTextController,
-              cursorColor: Colors.black,
-              cursorWidth: 1,
-              style: TextStyle(
-                fontSize: 20,
+      body: SingleChildScrollView(
+        child: Container(
+          color: Colors.white,
+          height: 1000,
+          padding: EdgeInsets.symmetric(
+            vertical: 5,
+            horizontal: 10,
+          ),
+          child: Column(
+            children: [
+              if (widget.content.imageProvider != null)
+                Image(image: widget.content.imageProvider),
+              TextField(
+                controller: widget.titleTextController,
+                cursorColor: Colors.black,
+                cursorWidth: 1,
+                style: TextStyle(
+                  fontSize: 20,
+                ),
+                decoration: InputDecoration(
+                  hintText: 'タイトル',
+                  border: InputBorder.none,
+                ),
               ),
-              decoration: InputDecoration(
-                hintText: 'タイトル',
-                border: InputBorder.none,
+              TextField(
+                controller: widget.memoTextController,
+                cursorColor: Colors.black,
+                cursorWidth: 1,
+                decoration: InputDecoration(
+                  hintText: 'メモ',
+                  border: InputBorder.none,
+                ),
+                autofocus: true,
               ),
-            ),
-            TextField(
-              controller: widget.memoTextController,
-              cursorColor: Colors.black,
-              cursorWidth: 1,
-              decoration: InputDecoration(
-                hintText: 'メモ',
-                border: InputBorder.none,
-              ),
-              autofocus: true,
-            ),
-          ],
+            ],
+          ),
         ),
       ),
       // TODO: アイコンの配置修正、真ん中を寄せる。
