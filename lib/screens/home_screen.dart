@@ -42,6 +42,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   crossAxisCount: 2,
                   crossAxisSpacing: 10,
                   mainAxisSpacing: 10,
+                  // 画像が大きいとはみ出てしまうので、一旦Aspectで調整
+                  childAspectRatio: 0.5,
                 ),
                 itemBuilder: (context, index) {
                   final tile = ContentTile(content: contents[index]);
