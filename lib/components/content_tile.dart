@@ -10,8 +10,6 @@ class ContentTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.all(10),
-      width: 100,
-      height: 100,
       decoration: BoxDecoration(
         border: Border.all(),
         borderRadius: BorderRadius.circular(10),
@@ -24,7 +22,6 @@ class ContentTile extends StatelessWidget {
             if (content.imageProvider != null)
               Image(
                 image: content.imageProvider,
-                height: 50,
               ),
             Text(
               content.title,
