@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class Content {
   String title;
   String text;
-  ImageProvider imageProvider;
+  List<ImageProvider> imageProviders;
 
   Content({
     this.title,

@@ -68,8 +68,15 @@ class _EditContentScreenState extends State<EditContentScreen> {
           ),
           child: Column(
             children: [
-              if (widget.content.imageProvider != null)
-                Image(image: widget.content.imageProvider),
+              Container(
+                child: Row(
+                  children: widget.content.imageProviders.map((imageProvider) {
+                    return Expanded(
+                      child: Image(image: imageProvider),
+                    );
+                  }).toList(),
+                ),
+              ),
               TextField(
                 controller: widget.titleTextController,
                 cursorColor: Colors.black,
@@ -116,7 +123,7 @@ class _EditContentScreenState extends State<EditContentScreen> {
                         }
 
                         setState(() {
-                          widget.content.imageProvider = imageProvider;
+                          widget.content.imageProviders.add(imageProvider);
                         });
                       },
                     );
