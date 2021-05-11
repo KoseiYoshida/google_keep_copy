@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:goggle_keep_copy/components/content_tile.dart';
 import 'package:goggle_keep_copy/models/content.dart';
 import 'package:goggle_keep_copy/screens/edit_content_screen.dart';
+import 'package:quiver/iterables.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -9,7 +10,13 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  List<Content> contents = [];
+  List<Content> contents = [
+    for (final num in range(1, 5))
+      Content(
+        title: 'title$num',
+        text: 'text$num',
+      )
+  ];
 
   @override
   Widget build(BuildContext context) {
