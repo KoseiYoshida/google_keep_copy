@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:goggle_keep_copy/screens/add_content_screen.dart';
+import 'package:goggle_keep_copy/screens/edit_content_image_screen.dart';
 import 'package:goggle_keep_copy/screens/edit_content_screen.dart';
 import 'package:goggle_keep_copy/screens/home_screen.dart';
 
@@ -21,6 +22,7 @@ class MyApp extends StatelessWidget {
         '/': (BuildContext context) => HomeScreen(),
         '/add': (BuildContext context) => AddContentScreen(),
         '/edit': (BuildContext context) => EditContentScreen(),
+        '/edit_image': (BuildContext context) => EditContentImageScreen(),
       },
     );
   }
