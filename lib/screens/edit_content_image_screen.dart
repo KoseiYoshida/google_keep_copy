@@ -8,8 +8,12 @@ enum _Menu {
 
 class EditContentImageScreen extends StatefulWidget {
   final List<ImageProvider> imageProviders;
+  final int shownImageIndex;
 
-  EditContentImageScreen({this.imageProviders});
+  EditContentImageScreen({
+    this.imageProviders,
+    this.shownImageIndex,
+  });
 
   @override
   _EditContentImageScreenState createState() => _EditContentImageScreenState();
@@ -17,6 +21,13 @@ class EditContentImageScreen extends StatefulWidget {
 
 class _EditContentImageScreenState extends State<EditContentImageScreen> {
   int _shownImageIndex = 0;
+
+  @override
+  void initState() {
+    _shownImageIndex = widget.shownImageIndex;
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,6 +82,7 @@ class _EditContentImageScreenState extends State<EditContentImageScreen> {
             _shownImageIndex = value;
           });
         },
+        initialPage: _shownImageIndex,
       ),
     );
   }
@@ -107,14 +119,16 @@ class ImagePageView extends StatelessWidget {
   ImagePageView({
     this.imageProviders,
     this.onPageChanged,
+    this.initialPage = 0,
   });
 
   final List<ImageProvider> imageProviders;
   final Function(int) onPageChanged;
+  final int initialPage;
 
   @override
   Widget build(BuildContext context) {
-    final PageController controller = PageController(initialPage: 0);
+    final PageController controller = PageController(initialPage: initialPage);
     return PageView(
       scrollDirection: Axis.horizontal,
       controller: controller,

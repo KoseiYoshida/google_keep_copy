@@ -71,21 +71,35 @@ class _EditContentScreenState extends State<EditContentScreen> {
             children: [
               Container(
                 child: Row(
-                  children: widget.content.imageProviders.map((imageProvider) {
+                  children: widget.content.imageProviders
+                      .asMap()
+                      .entries
+                      .map((entry) {
+                    var index = entry.key;
+                    var imageProvider = entry.value;
+
                     return Expanded(
                       child: GestureDetector(
                         child: Image(image: imageProvider),
-                        onTap: () {
-                          Navigator.push<Content>(
+                        onTap: () async {
+                          var deletedImageIndex = await Navigator.push<int>(
                             context,
                             MaterialPageRoute(
                               builder: (_) {
                                 return EditContentImageScreen(
                                   imageProviders: widget.content.imageProviders,
+                                  shownImageIndex: index,
                                 );
                               },
                             ),
                           );
+
+                          if (deletedImageIndex != null) {
+                            setState(() {
+                              widget.content.imageProviders
+                                  .removeAt(deletedImageIndex);
+                            });
+                          }
                         },
                       ),
                     );
