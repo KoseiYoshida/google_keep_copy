@@ -7,18 +7,17 @@ enum _Menu {
 }
 
 class EditContentImageScreen extends StatefulWidget {
+  final List<ImageProvider> imageProviders;
+
+  EditContentImageScreen({this.imageProviders});
+
   @override
   _EditContentImageScreenState createState() => _EditContentImageScreenState();
 }
 
 class _EditContentImageScreenState extends State<EditContentImageScreen> {
-  final List<ImageProvider> imageProviders = [
-    AssetImage('assets/monkey.jpg'),
-    AssetImage('assets/monkey.jpg'),
-    AssetImage('assets/monkey.jpg'),
-  ];
-
   int _shownImageIndex = 0;
+  List<int> deletedIndex = <int>[];
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +33,7 @@ class _EditContentImageScreenState extends State<EditContentImageScreen> {
           },
         ),
         title: Text(
-          '${_shownImageIndex + 1}/${imageProviders.length}',
+          '${_shownImageIndex + 1}/${widget.imageProviders.length}',
           style: TextStyle(
             color: Colors.black,
             fontSize: 18,
@@ -52,7 +51,7 @@ class _EditContentImageScreenState extends State<EditContentImageScreen> {
         ],
       ),
       body: ImagePageView(
-        imageProviders: imageProviders,
+        imageProviders: widget.imageProviders,
         onPageChanged: (value) {
           setState(() {
             _shownImageIndex = value;

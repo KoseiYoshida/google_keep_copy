@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:goggle_keep_copy/models/content.dart';
+import 'package:goggle_keep_copy/screens/edit_content_image_screen.dart';
 import 'package:goggle_keep_copy/services/image_file_loader.dart';
 import 'package:goggle_keep_copy/utils/string_extension.dart';
 
@@ -72,7 +73,21 @@ class _EditContentScreenState extends State<EditContentScreen> {
                 child: Row(
                   children: widget.content.imageProviders.map((imageProvider) {
                     return Expanded(
-                      child: Image(image: imageProvider),
+                      child: GestureDetector(
+                        child: Image(image: imageProvider),
+                        onTap: () {
+                          Navigator.push<Content>(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) {
+                                return EditContentImageScreen(
+                                  imageProviders: widget.content.imageProviders,
+                                );
+                              },
+                            ),
+                          );
+                        },
+                      ),
                     );
                   }).toList(),
                 ),
