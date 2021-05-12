@@ -17,7 +17,6 @@ class EditContentImageScreen extends StatefulWidget {
 
 class _EditContentImageScreenState extends State<EditContentImageScreen> {
   int _shownImageIndex = 0;
-  List<int> deletedIndex = <int>[];
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +46,22 @@ class _EditContentImageScreenState extends State<EditContentImageScreen> {
             color: Colors.black,
             onPressed: () {},
           ),
-          ImageEditPopupMenu(),
+          ImageEditPopupMenu(
+            onSelected: (value) {
+              switch (value) {
+                case _Menu.extractTexts:
+                  break;
+                case _Menu.delete:
+                  Navigator.pop(context, _shownImageIndex);
+                  break;
+                case _Menu.send:
+                  break;
+                default:
+                  throw UnsupportedError(
+                      '${value.toString()} is not supported.');
+              }
+            },
+          ),
         ],
       ),
       body: ImagePageView(
@@ -63,12 +77,14 @@ class _EditContentImageScreenState extends State<EditContentImageScreen> {
 }
 
 class ImageEditPopupMenu extends StatelessWidget {
+  final Function(_Menu) onSelected;
+
+  ImageEditPopupMenu({this.onSelected});
+
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton<_Menu>(
-      onSelected: (value) {
-        print(value);
-      },
+      onSelected: onSelected,
       itemBuilder: (context) => [
         PopupMenuItem(
           value: _Menu.extractTexts,
