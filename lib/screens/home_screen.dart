@@ -130,14 +130,20 @@ class _HomeScreenState extends State<HomeScreen> {
             color: Colors.red,
           ),
           onPressed: () async {
-            var value = await Navigator.pushNamed(context, '/add');
-            if (value != null) {
-              if (!(value is Content)) {
-                throw 'Invalid type variable passed from route /add. Passed type:${value.runtimeType}';
-              }
-              var content = value as Content;
+            var createdContent = await Navigator.push<Content>(
+              context,
+              MaterialPageRoute(
+                builder: (_) {
+                  return EditContentScreen(
+                    content: Content(),
+                  );
+                },
+              ),
+            );
+
+            if (createdContent != null) {
               setState(() {
-                this.contents.add(content);
+                this.contents.add(createdContent);
               });
             }
           },
