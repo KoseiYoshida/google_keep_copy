@@ -1,7 +1,9 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:goggle_keep_copy/components/content_tile.dart';
 import 'package:goggle_keep_copy/models/content.dart';
 import 'package:goggle_keep_copy/screens/edit_content_screen.dart';
+import 'package:goggle_keep_copy/services/image_file_loader.dart';
 import 'package:quiver/iterables.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -120,7 +122,62 @@ class _HomeScreenState extends State<HomeScreen> {
                     Icons.image_outlined,
                     color: Colors.black,
                   ),
-                  onPressed: () {},
+                  onPressed: () async {
+                    var selected = await showDialog<int>(
+                      context: context,
+                      builder: (context) {
+                        return SimpleDialog(
+                          title: Text('画像を追加'),
+                          children: [
+                            SimpleDialogOption(
+                              onPressed: () {
+                                Navigator.pop(context, 1);
+                              },
+                              child: ListTile(
+                                leading: Icon(Icons.camera_alt_outlined),
+                                title: Text('写真を撮影'),
+                              ),
+                            ),
+                            SimpleDialogOption(
+                              onPressed: () {
+                                Navigator.pop(context, 2);
+                              },
+                              child: ListTile(
+                                leading: Icon(Icons.image_outlined),
+                                title: Text('画像を選択'),
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+
+                    File selectedFile;
+
+                    switch (selected) {
+                      case 1:
+                        print('写真を撮影');
+                        break;
+                      case 2:
+                        var loader = ImageFileLoader();
+                        selectedFile = await loader.getImageFromStorage();
+                        break;
+                      default:
+                        throw 'Invalid Number';
+                    }
+
+                    if (selectedFile != null) {
+                      var newContent = Content();
+                      newContent.imageProviders = [FileImage(selectedFile)];
+                      var editedContent = await openContentEditPage(newContent);
+
+                      if (editedContent != null) {
+                        setState(() {
+                          contents.add(editedContent);
+                        });
+                      }
+                    }
+                  },
                 ),
               ],
             ),
