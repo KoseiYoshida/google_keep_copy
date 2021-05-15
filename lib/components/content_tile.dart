@@ -10,8 +10,6 @@ class ContentTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.all(10),
-      width: 100,
-      height: 100,
       decoration: BoxDecoration(
         border: Border.all(),
         borderRadius: BorderRadius.circular(10),
@@ -21,6 +19,15 @@ class ContentTile extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Container(
+              child: Row(
+                children: content.imageProviders.map((imageProvider) {
+                  return Expanded(
+                    child: Image(image: imageProvider),
+                  );
+                }).toList(),
+              ),
+            ),
             Text(
               content.title,
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),

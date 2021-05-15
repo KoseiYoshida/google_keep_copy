@@ -2,7 +2,9 @@
     package="com.example.goggle_keep_copy">
    <application
         android:label="goggle_keep_copy"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:requestLegacyExternalStorage="true"
+       >
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
