@@ -18,6 +18,19 @@ class _HomeScreenState extends State<HomeScreen> {
       )
   ];
 
+  Future<Content> openContentEditPage(Content passedContent) async {
+    return await Navigator.push<Content>(
+      context,
+      MaterialPageRoute(
+        builder: (_) {
+          return EditContentScreen(
+            content: passedContent,
+          );
+        },
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -57,16 +70,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   return GestureDetector(
                     child: tile,
                     onTap: () async {
-                      var editedContent = await Navigator.push<Content>(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) {
-                            return EditContentScreen(
-                              content: contents[index],
-                            );
-                          },
-                        ),
-                      );
+                      var editedContent =
+                          await openContentEditPage(contents[index]);
 
                       if (editedContent != null) {
                         setState(() {
@@ -130,16 +135,7 @@ class _HomeScreenState extends State<HomeScreen> {
             color: Colors.red,
           ),
           onPressed: () async {
-            var createdContent = await Navigator.push<Content>(
-              context,
-              MaterialPageRoute(
-                builder: (_) {
-                  return EditContentScreen(
-                    content: Content(),
-                  );
-                },
-              ),
-            );
+            var createdContent = await openContentEditPage(Content());
 
             if (createdContent != null) {
               setState(() {
