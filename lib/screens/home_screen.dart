@@ -21,7 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
   ];
 
   Future<Content> openContentEditPage(Content passedContent) async {
-    return await Navigator.push<Content>(
+    return Navigator.push<Content>(
       context,
       MaterialPageRoute(
         builder: (_) {
@@ -41,17 +41,21 @@ class _HomeScreenState extends State<HomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Padding(
-              padding: const EdgeInsets.all(10.0),
+              padding: const EdgeInsets.all(10),
               child: Container(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Icon(Icons.menu),
+                    const Icon(Icons.menu),
                     // TextField(),
                     Row(
-                      children: [
-                        Icon(Icons.view_agenda_outlined),
-                        Icon(Icons.account_circle_outlined),
+                      children: const [
+                        Icon(
+                          Icons.view_agenda_outlined,
+                        ),
+                        Icon(
+                          Icons.account_circle_outlined,
+                        ),
                       ],
                     ),
                   ],
@@ -60,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             Expanded(
               child: GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                   crossAxisSpacing: 10,
                   mainAxisSpacing: 10,
@@ -70,17 +74,17 @@ class _HomeScreenState extends State<HomeScreen> {
                 itemBuilder: (context, index) {
                   final tile = ContentTile(content: contents[index]);
                   return GestureDetector(
-                    child: tile,
                     onTap: () async {
-                      var editedContent =
+                      final editedContent =
                           await openContentEditPage(contents[index]);
 
                       if (editedContent != null) {
                         setState(() {
-                          this.contents[index] = editedContent;
+                          contents[index] = editedContent;
                         });
                       }
                     },
+                    child: tile,
                   );
                 },
                 itemCount: contents.length,
@@ -89,51 +93,51 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
         bottomNavigationBar: BottomAppBar(
-          shape: CircularNotchedRectangle(),
+          shape: const CircularNotchedRectangle(),
           notchMargin: 5,
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: new Row(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: Row(
               mainAxisSize: MainAxisSize.max,
               children: <Widget>[
                 IconButton(
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.check_box_outlined,
                     color: Colors.black,
                   ),
                   onPressed: () {},
                 ),
                 IconButton(
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.brush_outlined,
                     color: Colors.black,
                   ),
                   onPressed: () {},
                 ),
                 IconButton(
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.mic_none,
                     color: Colors.black,
                   ),
                   onPressed: () {},
                 ),
                 IconButton(
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.image_outlined,
                     color: Colors.black,
                   ),
                   onPressed: () async {
-                    var selected = await showDialog<int>(
+                    final selected = await showDialog<int>(
                       context: context,
                       builder: (context) {
                         return SimpleDialog(
-                          title: Text('画像を追加'),
+                          title: const Text('画像を追加'),
                           children: [
                             SimpleDialogOption(
                               onPressed: () {
                                 Navigator.pop(context, 1);
                               },
-                              child: ListTile(
+                              child: const ListTile(
                                 leading: Icon(Icons.camera_alt_outlined),
                                 title: Text('写真を撮影'),
                               ),
@@ -142,7 +146,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               onPressed: () {
                                 Navigator.pop(context, 2);
                               },
-                              child: ListTile(
+                              child: const ListTile(
                                 leading: Icon(Icons.image_outlined),
                                 title: Text('画像を選択'),
                               ),
@@ -159,17 +163,19 @@ class _HomeScreenState extends State<HomeScreen> {
                         print('写真を撮影');
                         break;
                       case 2:
-                        var loader = ImageFileLoader();
+                        final loader = ImageFileLoader();
                         selectedFile = await loader.getImageFromStorage();
                         break;
                       default:
-                        throw 'Invalid Number';
+                        throw ArgumentError.value(selected);
                     }
 
                     if (selectedFile != null) {
-                      var newContent = Content();
-                      newContent.imageProviders = [FileImage(selectedFile)];
-                      var editedContent = await openContentEditPage(newContent);
+                      final newContent = Content()
+                        ..imageProviders = [FileImage(selectedFile)];
+
+                      final editedContent =
+                          await openContentEditPage(newContent);
 
                       if (editedContent != null) {
                         setState(() {
@@ -186,20 +192,20 @@ class _HomeScreenState extends State<HomeScreen> {
         floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.white,
-          child: Icon(
+          onPressed: () async {
+            final createdContent = await openContentEditPage(Content());
+
+            if (createdContent != null) {
+              setState(() {
+                contents.add(createdContent);
+              });
+            }
+          },
+          child: const Icon(
             Icons.add,
             size: 45,
             color: Colors.red,
           ),
-          onPressed: () async {
-            var createdContent = await openContentEditPage(Content());
-
-            if (createdContent != null) {
-              setState(() {
-                this.contents.add(createdContent);
-              });
-            }
-          },
         ),
       ),
     );

@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 
 class Content {
-  String title;
-  String text;
-  List<ImageProvider> imageProviders = [
-    AssetImage('assets/monkey.jpg'),
-    AssetImage('assets/monkey.jpg'),
-    AssetImage('assets/monkey.jpg'),
-  ];
-
   Content({
     this.title,
     this.text,
   });
+
+  String title;
+  String text;
+  List<ImageProvider> imageProviders = [
+    const AssetImage('assets/monkey.jpg'),
+    const AssetImage('assets/monkey.jpg'),
+    const AssetImage('assets/monkey.jpg'),
+  ];
 }

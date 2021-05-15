@@ -2,20 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:goggle_keep_copy/models/content.dart';
 
 class ContentTile extends StatelessWidget {
-  final Content content;
+  const ContentTile({this.content});
 
-  ContentTile({this.content});
+  final Content content;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.all(10),
+      margin: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         border: Border.all(),
         borderRadius: BorderRadius.circular(10),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(8),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -30,9 +30,9 @@ class ContentTile extends StatelessWidget {
             ),
             Text(
               content.title,
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            SizedBox(
+            const SizedBox(
               height: 5,
             ),
             Text(
