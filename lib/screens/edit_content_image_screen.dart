@@ -58,12 +58,43 @@ class _EditContentImageScreenState extends State<EditContentImageScreen> {
             onPressed: () {},
           ),
           ImageEditPopupMenu(
-            onSelected: (value) {
+            onSelected: (value) async {
               switch (value) {
                 case _Menu.extractTexts:
                   break;
                 case _Menu.delete:
-                  Navigator.pop(context, _shownImageIndex);
+                  var selected = await showDialog<int>(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        content: Text('画像を削除しますか'),
+                        actions: [
+                          TextButton(
+                            child: Text('キャンセル'),
+                            onPressed: () {
+                              Navigator.pop(context, 1);
+                            },
+                          ),
+                          TextButton(
+                            child: Text('削除'),
+                            onPressed: () {
+                              Navigator.pop(context, 2);
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
+
+                  switch (selected) {
+                    case 1:
+                      break;
+                    case 2:
+                      Navigator.pop(context, _shownImageIndex);
+                      break;
+                    default:
+                      throw 'Invalid number';
+                  }
                   break;
                 case _Menu.send:
                   break;
