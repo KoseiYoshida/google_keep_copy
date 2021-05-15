@@ -7,13 +7,13 @@ enum _Menu {
 }
 
 class EditContentImageScreen extends StatefulWidget {
-  final List<ImageProvider> imageProviders;
-  final int shownImageIndex;
-
-  EditContentImageScreen({
+  const EditContentImageScreen({
     this.imageProviders,
     this.shownImageIndex,
   });
+
+  final List<ImageProvider> imageProviders;
+  final int shownImageIndex;
 
   @override
   _EditContentImageScreenState createState() => _EditContentImageScreenState();
@@ -36,7 +36,7 @@ class _EditContentImageScreenState extends State<EditContentImageScreen> {
         backgroundColor: Colors.grey.shade200,
         elevation: 1,
         leading: IconButton(
-          icon: BackButtonIcon(),
+          icon: const BackButtonIcon(),
           color: Colors.black,
           onPressed: () {
             Navigator.pop(context);
@@ -44,14 +44,14 @@ class _EditContentImageScreenState extends State<EditContentImageScreen> {
         ),
         title: Text(
           '${_shownImageIndex + 1}/${widget.imageProviders.length}',
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.black,
             fontSize: 18,
           ),
         ),
         actions: [
           IconButton(
-            icon: Icon(
+            icon: const Icon(
               Icons.brush_outlined,
             ),
             color: Colors.black,
@@ -63,23 +63,23 @@ class _EditContentImageScreenState extends State<EditContentImageScreen> {
                 case _Menu.extractTexts:
                   break;
                 case _Menu.delete:
-                  var selected = await showDialog<int>(
+                  final selected = await showDialog<int>(
                     context: context,
                     builder: (context) {
                       return AlertDialog(
-                        content: Text('画像を削除しますか'),
+                        content: const Text('画像を削除しますか'),
                         actions: [
                           TextButton(
-                            child: Text('キャンセル'),
                             onPressed: () {
                               Navigator.pop(context, 1);
                             },
+                            child: const Text('キャンセル'),
                           ),
                           TextButton(
-                            child: Text('削除'),
                             onPressed: () {
                               Navigator.pop(context, 2);
                             },
+                            child: const Text('削除'),
                           ),
                         ],
                       );
@@ -93,14 +93,11 @@ class _EditContentImageScreenState extends State<EditContentImageScreen> {
                       Navigator.pop(context, _shownImageIndex);
                       break;
                     default:
-                      throw 'Invalid number';
+                      throw UnsupportedError('$selected is not supported}');
                   }
                   break;
                 case _Menu.send:
                   break;
-                default:
-                  throw UnsupportedError(
-                      '${value.toString()} is not supported.');
               }
             },
           ),
@@ -120,24 +117,24 @@ class _EditContentImageScreenState extends State<EditContentImageScreen> {
 }
 
 class ImageEditPopupMenu extends StatelessWidget {
-  final Function(_Menu) onSelected;
+  const ImageEditPopupMenu({this.onSelected});
 
-  ImageEditPopupMenu({this.onSelected});
+  final Function(_Menu) onSelected;
 
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton<_Menu>(
       onSelected: onSelected,
       itemBuilder: (context) => [
-        PopupMenuItem(
+        const PopupMenuItem(
           value: _Menu.extractTexts,
           child: Text('画像のテキストを抽出'),
         ),
-        PopupMenuItem(
+        const PopupMenuItem(
           value: _Menu.send,
           child: Text('送信'),
         ),
-        PopupMenuItem(
+        const PopupMenuItem(
           value: _Menu.delete,
           child: Text('削除'),
         ),
@@ -147,7 +144,7 @@ class ImageEditPopupMenu extends StatelessWidget {
 }
 
 class ImagePageView extends StatelessWidget {
-  ImagePageView({
+  const ImagePageView({
     this.imageProviders,
     this.onPageChanged,
     this.initialPage = 0,
@@ -159,10 +156,11 @@ class ImagePageView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final PageController controller = PageController(initialPage: initialPage);
+    final controller = PageController(initialPage: initialPage);
     return PageView(
       scrollDirection: Axis.horizontal,
       controller: controller,
+      onPageChanged: onPageChanged,
       children: imageProviders.map((e) {
         return Center(
           child: Image(
@@ -170,7 +168,6 @@ class ImagePageView extends StatelessWidget {
           ),
         );
       }).toList(),
-      onPageChanged: onPageChanged,
     );
   }
 }

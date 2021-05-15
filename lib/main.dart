@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
       routes: <String, WidgetBuilder>{
         '/': (BuildContext context) => HomeScreen(),
         '/edit': (BuildContext context) => EditContentScreen(),
-        '/edit_image': (BuildContext context) => EditContentImageScreen(),
+        '/edit_image': (BuildContext context) => const EditContentImageScreen(),
       },
     );
   }

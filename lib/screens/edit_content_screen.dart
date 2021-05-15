@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -26,13 +25,13 @@ class _EditContentScreenState extends State<EditContentScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        iconTheme: IconThemeData(),
+        iconTheme: const IconThemeData(),
         elevation: 0,
         leading: IconButton(
-          icon: BackButtonIcon(),
+          icon: const BackButtonIcon(),
           onPressed: () {
-            var title = widget.titleTextController.text;
-            var memo = widget.memoTextController.text;
+            final title = widget.titleTextController.text;
+            final memo = widget.memoTextController.text;
 
             widget.content.title = title.isNotBlank ? title : '';
             widget.content.text = memo.isNotBlank ? memo : '';
@@ -46,15 +45,15 @@ class _EditContentScreenState extends State<EditContentScreen> {
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.push_pin_outlined),
+            icon: const Icon(Icons.push_pin_outlined),
             onPressed: () {},
           ),
           IconButton(
-            icon: Icon(Icons.add_alert_outlined),
+            icon: const Icon(Icons.add_alert_outlined),
             onPressed: () {},
           ),
           IconButton(
-            icon: Icon(Icons.archive_outlined),
+            icon: const Icon(Icons.archive_outlined),
             onPressed: () {},
           ),
         ],
@@ -63,7 +62,7 @@ class _EditContentScreenState extends State<EditContentScreen> {
         child: Container(
           color: Colors.white,
           height: 1000,
-          padding: EdgeInsets.symmetric(
+          padding: const EdgeInsets.symmetric(
             vertical: 5,
             horizontal: 10,
           ),
@@ -75,14 +74,13 @@ class _EditContentScreenState extends State<EditContentScreen> {
                       .asMap()
                       .entries
                       .map((entry) {
-                    var index = entry.key;
-                    var imageProvider = entry.value;
+                    final index = entry.key;
+                    final imageProvider = entry.value;
 
                     return Expanded(
                       child: GestureDetector(
-                        child: Image(image: imageProvider),
                         onTap: () async {
-                          var deletedImageIndex = await Navigator.push<int>(
+                          final deletedImageIndex = await Navigator.push<int>(
                             context,
                             MaterialPageRoute(
                               builder: (_) {
@@ -101,6 +99,7 @@ class _EditContentScreenState extends State<EditContentScreen> {
                             });
                           }
                         },
+                        child: Image(image: imageProvider),
                       ),
                     );
                   }).toList(),
@@ -110,10 +109,10 @@ class _EditContentScreenState extends State<EditContentScreen> {
                 controller: widget.titleTextController,
                 cursorColor: Colors.black,
                 cursorWidth: 1,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 20,
                 ),
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: 'タイトル',
                   border: InputBorder.none,
                 ),
@@ -122,7 +121,7 @@ class _EditContentScreenState extends State<EditContentScreen> {
                 controller: widget.memoTextController,
                 cursorColor: Colors.black,
                 cursorWidth: 1,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: 'メモ',
                   border: InputBorder.none,
                 ),
@@ -132,16 +131,16 @@ class _EditContentScreenState extends State<EditContentScreen> {
           ),
         ),
       ),
-      // TODO: アイコンの配置修正、真ん中を寄せる。
+      // TODO(Kosei): アイコンの配置修正、真ん中を寄せる。
       bottomNavigationBar: BottomAppBar(
         elevation: 0,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             IconButton(
-              icon: Icon(Icons.add_box_outlined),
+              icon: const Icon(Icons.add_box_outlined),
               onPressed: () {
-                showModalBottomSheet(
+                showModalBottomSheet<void>(
                   context: context,
                   builder: (context) {
                     return ContentSelectionSheet(
@@ -161,15 +160,15 @@ class _EditContentScreenState extends State<EditContentScreen> {
               },
             ),
             IconButton(
-              icon: Icon(Icons.undo),
+              icon: const Icon(Icons.undo),
               onPressed: () {},
             ),
             IconButton(
-              icon: Icon(Icons.redo),
+              icon: const Icon(Icons.redo),
               onPressed: () {},
             ),
             IconButton(
-              icon: Icon(Icons.more_vert),
+              icon: const Icon(Icons.more_vert),
               onPressed: () {},
             ),
           ],
@@ -180,41 +179,41 @@ class _EditContentScreenState extends State<EditContentScreen> {
 }
 
 class ContentSelectionSheet extends StatelessWidget {
+  // TODO(Kosei): Contentを直接渡さない方式にする。
+  const ContentSelectionSheet({this.content, this.onSelectImage});
+
   final Content content;
   final Function(ImageProvider) onSelectImage;
-
-  // TODO: Contentを直接渡さない方式にする。
-  ContentSelectionSheet({this.content, this.onSelectImage});
 
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        ListTile(
+        const ListTile(
           leading: Icon(Icons.camera_alt_outlined),
           title: Text('写真を撮影'),
         ),
         ListTile(
-          leading: Icon(Icons.image_outlined),
-          title: Text('画像を追加'),
+          leading: const Icon(Icons.image_outlined),
+          title: const Text('画像を追加'),
           onTap: () async {
-            var loader = ImageFileLoader();
-            var file = await loader.getImageFromStorage();
+            final loader = ImageFileLoader();
+            final file = await loader.getImageFromStorage();
             if (file != null) {
               onSelectImage(FileImage(file));
             }
           },
         ),
-        ListTile(
+        const ListTile(
           leading: Icon(Icons.brush_outlined),
           title: Text('図形描画'),
         ),
-        ListTile(
+        const ListTile(
           leading: Icon(Icons.mic_none),
           title: Text('録音'),
         ),
-        ListTile(
+        const ListTile(
           leading: Icon(Icons.check_box_outlined),
           title: Text('チェックボックス'),
         ),
