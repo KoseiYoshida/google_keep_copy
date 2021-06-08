@@ -4,12 +4,12 @@ import 'package:image_picker/image_picker.dart';
 class ImageFileLoader {
   final picker = ImagePicker();
 
-  Future<File> getImageFromStorage() async {
+  Future<File?> getImageFromStorage() async {
     final pickedFile = await picker.getImage(source: ImageSource.gallery);
     return pickedFile != null ? File(pickedFile.path) : null;
   }
 
-  Future<File> getImageFromCamera() async {
+  Future<File?> getImageFromCamera() async {
     final pickedFile = await picker.getImage(source: ImageSource.camera);
     return pickedFile != null ? File(pickedFile.path) : null;
   }

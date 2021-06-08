@@ -1,16 +1,16 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class Content {
-  Content({
-    this.title,
-    this.text,
-  });
+part 'content.freezed.dart';
 
-  String title;
-  String text;
-  List<ImageProvider> imageProviders = [
-    const AssetImage('assets/monkey.jpg'),
-    const AssetImage('assets/monkey.jpg'),
-    const AssetImage('assets/monkey.jpg'),
-  ];
+@freezed
+abstract class Content with _$Content {
+  factory Content({
+    required String title,
+    required String text,
+    @Default(<ImageProvider>[]) List<ImageProvider> images,
+  }) = _Content;
+
+  Content._();
 }

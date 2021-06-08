@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:goggle_keep_copy/models/content.dart';
+import 'package:goggle_keep_copy/models/unique_content.dart';
 
 class ContentTile extends StatelessWidget {
-  const ContentTile({this.content});
+  const ContentTile({required this.uniqueContent});
 
-  final Content content;
+  // TODO(Kosei): ここではUniqueIDまでいらないはず？Contentのみを渡す。
+  final UniqueContent uniqueContent;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +22,7 @@ class ContentTile extends StatelessWidget {
           children: [
             Container(
               child: Row(
-                children: content.imageProviders.map((imageProvider) {
+                children: uniqueContent.content.images.map((imageProvider) {
                   return Expanded(
                     child: Image(image: imageProvider),
                   );
@@ -29,14 +30,14 @@ class ContentTile extends StatelessWidget {
               ),
             ),
             Text(
-              content.title,
+              uniqueContent.content.title,
               style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(
               height: 5,
             ),
             Text(
-              content.text,
+              uniqueContent.content.text,
             ),
           ],
         ),

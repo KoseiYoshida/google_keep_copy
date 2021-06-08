@@ -1,28 +1,30 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
-import 'package:goggle_keep_copy/models/content.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:goggle_keep_copy/models/unique_content_id.dart';
+import 'package:goggle_keep_copy/models/unique_contents_controller.dart';
 import 'package:goggle_keep_copy/screens/edit_content_image_screen.dart';
 import 'package:goggle_keep_copy/services/image_file_loader.dart';
 import 'package:goggle_keep_copy/utils/string_extension.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class EditContentScreen extends StatefulWidget {
-  EditContentScreen({this.content}) {
-    titleTextController.text = content.title;
-    memoTextController.text = content.text;
-  }
+class EditContentScreen extends HookWidget {
+  EditContentScreen({required this.uniqueContentId});
 
-  final Content content;
-  final TextEditingController titleTextController = TextEditingController();
-  final TextEditingController memoTextController = TextEditingController();
+  final UniqueContentId uniqueContentId;
+  final titleTextController = TextEditingController();
+  final memoTextController = TextEditingController();
 
-  @override
-  _EditContentScreenState createState() => _EditContentScreenState();
-}
+  // TODO(Kosei): EditContentControllerをつくるべき？
 
-class _EditContentScreenState extends State<EditContentScreen> {
   @override
   Widget build(BuildContext context) {
+    final uniqueContent =
+        useProvider(uniqueContentsProvider).uniqueContent(uniqueContentId);
+    final controller = useProvider(uniqueContentsProvider.notifier);
+
+    titleTextController.text = uniqueContent.content.title;
+    memoTextController.text = uniqueContent.content.text;
+
     return Scaffold(
       appBar: AppBar(
         iconTheme: const IconThemeData(),
@@ -30,16 +32,18 @@ class _EditContentScreenState extends State<EditContentScreen> {
         leading: IconButton(
           icon: const BackButtonIcon(),
           onPressed: () {
-            final title = widget.titleTextController.text;
-            final memo = widget.memoTextController.text;
+            var title = titleTextController.text;
+            var memo = memoTextController.text;
 
-            widget.content.title = title.isNotBlank ? title : '';
-            widget.content.text = memo.isNotBlank ? memo : '';
+            title = title.isNotBlank ? title : '';
+            memo = memo.isNotBlank ? memo : '';
 
-            Navigator.pop(
-              context,
-              widget.content,
-            );
+            final newContent =
+                uniqueContent.copyWith.content(title: title, text: memo);
+
+            controller.updateContent(newContent);
+
+            Navigator.pop(context);
           },
           tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
         ),
@@ -70,43 +74,34 @@ class _EditContentScreenState extends State<EditContentScreen> {
             children: [
               Container(
                 child: Row(
-                  children: widget.content.imageProviders
-                      .asMap()
-                      .entries
-                      .map((entry) {
-                    final index = entry.key;
-                    final imageProvider = entry.value;
-
-                    return Expanded(
-                      child: GestureDetector(
-                        onTap: () async {
-                          final deletedImageIndex = await Navigator.push<int>(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) {
-                                return EditContentImageScreen(
-                                  imageProviders: widget.content.imageProviders,
-                                  shownImageIndex: index,
-                                );
-                              },
-                            ),
-                          );
-
-                          if (deletedImageIndex != null) {
-                            setState(() {
-                              widget.content.imageProviders
-                                  .removeAt(deletedImageIndex);
-                            });
-                          }
-                        },
-                        child: Image(image: imageProvider),
-                      ),
-                    );
-                  }).toList(),
+                  children: uniqueContent.content.images.asMap().entries.map(
+                    (entry) {
+                      final index = entry.key;
+                      final imageProvider = entry.value;
+                      return Expanded(
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.push<int>(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) {
+                                  return EditContentImageScreen(
+                                    id: uniqueContent.id,
+                                    shownImageIndex: index,
+                                  );
+                                },
+                              ),
+                            );
+                          },
+                          child: Image(image: imageProvider),
+                        ),
+                      );
+                    },
+                  ).toList(),
                 ),
               ),
               TextField(
-                controller: widget.titleTextController,
+                controller: titleTextController,
                 cursorColor: Colors.black,
                 cursorWidth: 1,
                 style: const TextStyle(
@@ -118,7 +113,7 @@ class _EditContentScreenState extends State<EditContentScreen> {
                 ),
               ),
               TextField(
-                controller: widget.memoTextController,
+                controller: memoTextController,
                 cursorColor: Colors.black,
                 cursorWidth: 1,
                 decoration: const InputDecoration(
@@ -144,15 +139,17 @@ class _EditContentScreenState extends State<EditContentScreen> {
                   context: context,
                   builder: (context) {
                     return ContentSelectionSheet(
-                      content: widget.content,
                       onSelectImage: (imageProvider) {
                         if (imageProvider == null) {
                           throw ArgumentError.notNull(imageProvider.toString());
                         }
 
-                        setState(() {
-                          widget.content.imageProviders.add(imageProvider);
-                        });
+                        final newImages = uniqueContent.content.images.toList()
+                          ..add(imageProvider);
+                        final newContent =
+                            uniqueContent.copyWith.content(images: newImages);
+
+                        controller.updateContent(newContent);
                       },
                     );
                   },
@@ -180,10 +177,11 @@ class _EditContentScreenState extends State<EditContentScreen> {
 
 class ContentSelectionSheet extends StatelessWidget {
   // TODO(Kosei): Contentを直接渡さない方式にする。
-  const ContentSelectionSheet({this.content, this.onSelectImage});
+  const ContentSelectionSheet({
+    required this.onSelectImage,
+  });
 
-  final Content content;
-  final Function(ImageProvider) onSelectImage;
+  final Function(ImageProvider?) onSelectImage;
 
   @override
   Widget build(BuildContext context) {
