@@ -67,11 +67,16 @@ class UniqueContentsController extends StateNotifier<UniqueContentsState>
   }
 
   void updateContent(UniqueContent content) {
-    // TODO(Kosei): 操作がおかしい気がする。
-    final index = state.getIndex(content.id);
-    final current = state.contents;
-    current[index] = content;
-    state = state.copyWith(contents: current);
+    final currentState = state;
+    final clone = currentState.contents.map<UniqueContent>((e) {
+      if (e.id == content.id) {
+        return e.copyWith(content: content.content);
+      } else {
+        return e;
+      }
+    }).toList();
+
+    state = currentState.copyWith(contents: clone);
   }
 
   void delete(UniqueContentId uniqueContentId) {
