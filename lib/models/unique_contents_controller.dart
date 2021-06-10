@@ -5,7 +5,6 @@ import 'package:goggle_keep_copy/models/unique_content_id.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:quiver/iterables.dart';
 import 'package:state_notifier/state_notifier.dart';
-import 'package:uuid/uuid.dart';
 
 import 'unique_contents_state.dart';
 
@@ -18,12 +17,6 @@ class UniqueContentsController extends StateNotifier<UniqueContentsState>
     with LocatorMixin {
   UniqueContentsController() : super(UniqueContentsState());
 
-  // TODO(Kosei): id生成処理はUniqueContentIdクラスにあった方がよい？
-  final _uuid = const Uuid();
-  UniqueContentId _getContentUuid() {
-    return UniqueContentId(id: _uuid.v1().toLowerCase());
-  }
-
   @override
   void initState() async {
     super.initState();
@@ -35,7 +28,7 @@ class UniqueContentsController extends StateNotifier<UniqueContentsState>
       contents: [
         for (final num in range(1, 5))
           UniqueContent(
-            id: UniqueContentId(id: _uuid.v1().toLowerCase()),
+            id: UniqueContentId.generate(),
             content: Content(
               title: 'Title$num',
               text: 'text$num',
@@ -52,7 +45,7 @@ class UniqueContentsController extends StateNotifier<UniqueContentsState>
 
   UniqueContentId add(Content content) {
     final newUniqueContent = UniqueContent(
-      id: _getContentUuid(),
+      id: UniqueContentId.generate(),
       content: content,
     );
 
@@ -88,7 +81,7 @@ class UniqueContentsController extends StateNotifier<UniqueContentsState>
 
   void deleteImage(UniqueContentId uniqueContentId, ImageProvider image) {
     // TODO(Kosei): やってることが冗長すぎる。短い書き方or責務の分離ができるはず。
-
+    // image削除専用のメソッドじゃなくて、updateContent使う方式にする！
     final uniqueContent = state.uniqueContent(uniqueContentId);
     final images = uniqueContent.content.images
       ..removeWhere((element) => element == image);

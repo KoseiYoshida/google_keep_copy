@@ -1,13 +1,16 @@
-import 'package:flutter/foundation.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:uuid/uuid.dart';
 
-part 'unique_content_id.freezed.dart';
+class UniqueContentId {
+  UniqueContentId.generate() {
+    _id = _generateUuid();
+  }
 
-@freezed
-abstract class UniqueContentId with _$UniqueContentId {
-  factory UniqueContentId({
-    required String id,
-  }) = _UniqueContentId;
+  late final String _id;
+  String get id => _id;
 
-  UniqueContentId._();
+  static const _uuid = Uuid();
+
+  static String _generateUuid() {
+    return _uuid.v1().toLowerCase();
+  }
 }
