@@ -69,7 +69,7 @@ class HomeScreen extends HookWidget {
                 ),
                 itemBuilder: (context, index) {
                   final tile = ContentTile(
-                    uniqueContent: contents[index],
+                    content: contents[index].content,
                   );
                   return GestureDetector(
                     onTap: () {
