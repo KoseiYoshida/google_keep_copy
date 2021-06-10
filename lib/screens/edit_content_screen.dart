@@ -176,7 +176,6 @@ class EditContentScreen extends HookWidget {
 }
 
 class ContentSelectionSheet extends StatelessWidget {
-  // TODO(Kosei): Contentを直接渡さない方式にする。
   const ContentSelectionSheet({
     required this.onSelectImage,
   });
