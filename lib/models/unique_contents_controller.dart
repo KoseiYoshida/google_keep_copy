@@ -24,6 +24,7 @@ class UniqueContentsController extends StateNotifier<UniqueContentsState>
     // Load中状態を追加したら、使う。
     // await Future<void>.delayed(const Duration(seconds: 3));
 
+    // TODO(Kosei): ProviderScopeのところで、overrideValueを使って初期データを挿入する。
     state = UniqueContentsState(
       contents: [
         for (final num in range(1, 5))

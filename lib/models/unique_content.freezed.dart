@@ -44,6 +44,7 @@ abstract class $UniqueContentCopyWith<$Res> {
       _$UniqueContentCopyWithImpl<$Res>;
   $Res call({UniqueContentId id, Content content});
 
+  $UniqueContentIdCopyWith<$Res> get id;
   $ContentCopyWith<$Res> get content;
 }
 
@@ -74,6 +75,13 @@ class _$UniqueContentCopyWithImpl<$Res>
   }
 
   @override
+  $UniqueContentIdCopyWith<$Res> get id {
+    return $UniqueContentIdCopyWith<$Res>(_value.id, (value) {
+      return _then(_value.copyWith(id: value));
+    });
+  }
+
+  @override
   $ContentCopyWith<$Res> get content {
     return $ContentCopyWith<$Res>(_value.content, (value) {
       return _then(_value.copyWith(content: value));
@@ -90,6 +98,8 @@ abstract class _$UniqueContentCopyWith<$Res>
   @override
   $Res call({UniqueContentId id, Content content});
 
+  @override
+  $UniqueContentIdCopyWith<$Res> get id;
   @override
   $ContentCopyWith<$Res> get content;
 }
