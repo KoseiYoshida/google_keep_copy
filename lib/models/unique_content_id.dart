@@ -1,20 +1,27 @@
-import 'package:flutter/foundation.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:uuid/uuid.dart';
 
-part 'unique_content_id.freezed.dart';
+class UniqueContentId {
+  UniqueContentId.generate() : id = _generateUuid();
 
-@freezed
-abstract class UniqueContentId with _$UniqueContentId {
-  factory UniqueContentId.generate() = _UniqueContentId;
-
-  UniqueContentId._();
-
-  late final String _id = _generateUuid();
+  final String id;
 
   static const _uuid = Uuid();
 
   static String _generateUuid() {
     return _uuid.v1().toLowerCase();
+  }
+
+  @override
+  String toString() {
+    return 'UniqueContentId(id: $id)';
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode ^ id.hashCode;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other is UniqueContentId && other.id == id);
   }
 }
