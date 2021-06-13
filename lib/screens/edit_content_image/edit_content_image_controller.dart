@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:goggle_keep_copy/models/controllers/unique_contents_controller.dart';
 import 'package:goggle_keep_copy/models/unique_content_id.dart';
-import 'package:goggle_keep_copy/models/unique_contents_controller.dart';
-import 'package:goggle_keep_copy/screens/edit_content_image_state.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
+import 'edit_content_image_state.dart';
 
 final editContentImageProvider = StateNotifierProvider.autoDispose
     .family<EditContentImageController, EditContentImageState, UniqueContentId>(

@@ -3,13 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:goggle_keep_copy/components/content_tile.dart';
 import 'package:goggle_keep_copy/models/content.dart';
+import 'package:goggle_keep_copy/models/controllers/unique_contents_controller.dart';
 import 'package:goggle_keep_copy/models/unique_content_id.dart';
-import 'package:goggle_keep_copy/models/unique_contents_controller.dart';
 import 'package:goggle_keep_copy/models/unique_content.dart';
-import 'package:goggle_keep_copy/screens/edit_content_screen.dart';
+import 'package:goggle_keep_copy/screens/edit_content/edit_content_screen.dart';
 import 'package:goggle_keep_copy/services/image_file_loader.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:quiver/iterables.dart';
 
 class HomeScreen extends HookWidget {
   @override

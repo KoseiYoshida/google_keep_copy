@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:goggle_keep_copy/models/unique_content_id.dart';
-import 'package:goggle_keep_copy/screens/edit_content_image_controller.dart';
+import 'package:goggle_keep_copy/screens/edit_content_image/edit_content_image_controller.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 enum _Menu {

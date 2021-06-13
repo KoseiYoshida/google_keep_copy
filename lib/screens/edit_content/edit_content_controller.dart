@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:goggle_keep_copy/models/content.dart';
+import 'package:goggle_keep_copy/models/controllers/unique_contents_controller.dart';
 import 'package:goggle_keep_copy/models/unique_content_id.dart';
-import 'package:goggle_keep_copy/models/unique_contents_controller.dart';
-import 'package:goggle_keep_copy/screens/edit_content_state.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
+import 'edit_content_state.dart';
 
 final editContentProvider = StateNotifierProvider.autoDispose
     .family<EditContentController, EditContentState, UniqueContentId>(
