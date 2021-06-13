@@ -17,8 +17,8 @@ class _$ContentTearOff {
   const _$ContentTearOff();
 
   _Content call(
-      {required String title,
-      required String text,
+      {String title = '',
+      String text = '',
       List<ImageProvider<Object>> images = const <ImageProvider>[]}) {
     return _Content(
       title: title,
@@ -122,14 +122,14 @@ class __$ContentCopyWithImpl<$Res> extends _$ContentCopyWithImpl<$Res>
 /// @nodoc
 
 class _$_Content extends _Content with DiagnosticableTreeMixin {
-  _$_Content(
-      {required this.title,
-      required this.text,
-      this.images = const <ImageProvider>[]})
+  const _$_Content(
+      {this.title = '', this.text = '', this.images = const <ImageProvider>[]})
       : super._();
 
+  @JsonKey(defaultValue: '')
   @override
   final String title;
+  @JsonKey(defaultValue: '')
   @override
   final String text;
   @JsonKey(defaultValue: const <ImageProvider>[])
@@ -177,11 +177,11 @@ class _$_Content extends _Content with DiagnosticableTreeMixin {
 }
 
 abstract class _Content extends Content {
-  factory _Content(
-      {required String title,
-      required String text,
+  const factory _Content(
+      {String title,
+      String text,
       List<ImageProvider<Object>> images}) = _$_Content;
-  _Content._() : super._();
+  const _Content._() : super._();
 
   @override
   String get title => throw _privateConstructorUsedError;

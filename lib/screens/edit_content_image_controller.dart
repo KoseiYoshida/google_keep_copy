@@ -17,7 +17,6 @@ class EditContentImageController extends StateNotifier<EditContentImageState> {
     this._read, {
     required this.id,
   }) : super(EditContentImageState()) {
-    // TODO(Kosei): LocatorMixinを使った方がスッキリするのでは？
     _uniqueContentsControllerRemoveListener =
         _read(uniqueContentsProvider.notifier).addListener((contentsState) {
       final images = contentsState.uniqueContent(id).content.images;

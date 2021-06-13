@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:goggle_keep_copy/models/unique_content_id.dart';
-import 'package:goggle_keep_copy/models/unique_contents_controller.dart';
+import 'package:goggle_keep_copy/screens/edit_content_controller.dart';
 import 'package:goggle_keep_copy/screens/edit_content_image_screen.dart';
 import 'package:goggle_keep_copy/services/image_file_loader.dart';
 import 'package:goggle_keep_copy/utils/string_extension.dart';
@@ -14,16 +14,28 @@ class EditContentScreen extends HookWidget {
   final titleTextController = TextEditingController();
   final memoTextController = TextEditingController();
 
-  // TODO(Kosei): EditContentControllerをつくるべき？
-
   @override
   Widget build(BuildContext context) {
-    final uniqueContent =
-        useProvider(uniqueContentsProvider).uniqueContent(uniqueContentId);
-    final controller = useProvider(uniqueContentsProvider.notifier);
+    final controller =
+        useProvider(editContentProvider(uniqueContentId).notifier);
+    final content = useProvider(editContentProvider(uniqueContentId)).content;
 
-    titleTextController.text = uniqueContent.content.title;
-    memoTextController.text = uniqueContent.content.text;
+    titleTextController.text = content.title;
+    memoTextController.text = content.text;
+
+    void updateWithImage(ImageProvider newImage) {
+      var title = titleTextController.text;
+      var memo = memoTextController.text;
+
+      title = title.isNotBlank ? title : '';
+      memo = memo.isNotBlank ? memo : '';
+
+      final images = [...content.images, newImage];
+      final newContent =
+          content.copyWith(title: title, text: memo, images: images);
+
+      controller.update(newContent);
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -38,10 +50,9 @@ class EditContentScreen extends HookWidget {
             title = title.isNotBlank ? title : '';
             memo = memo.isNotBlank ? memo : '';
 
-            final newContent =
-                uniqueContent.copyWith.content(title: title, text: memo);
+            final newContent = content.copyWith(title: title, text: memo);
 
-            controller.updateContent(newContent);
+            controller.update(newContent);
 
             Navigator.pop(context);
           },
@@ -74,7 +85,7 @@ class EditContentScreen extends HookWidget {
             children: [
               Container(
                 child: Row(
-                  children: uniqueContent.content.images.asMap().entries.map(
+                  children: content.images.asMap().entries.map(
                     (entry) {
                       final index = entry.key;
                       final imageProvider = entry.value;
@@ -86,7 +97,7 @@ class EditContentScreen extends HookWidget {
                               MaterialPageRoute(
                                 builder: (_) {
                                   return EditContentImageScreen(
-                                    id: uniqueContent.id,
+                                    id: uniqueContentId,
                                     shownImageIndex: index,
                                   );
                                 },
@@ -144,12 +155,7 @@ class EditContentScreen extends HookWidget {
                           throw ArgumentError.notNull(imageProvider.toString());
                         }
 
-                        final newImages = uniqueContent.content.images.toList()
-                          ..add(imageProvider);
-                        final newContent =
-                            uniqueContent.copyWith.content(images: newImages);
-
-                        controller.updateContent(newContent);
+                        updateWithImage(imageProvider);
                       },
                     );
                   },

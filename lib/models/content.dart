@@ -6,11 +6,11 @@ part 'content.freezed.dart';
 
 @freezed
 abstract class Content with _$Content {
-  factory Content({
-    required String title,
-    required String text,
+  const factory Content({
+    @Default('') String title,
+    @Default('') String text,
     @Default(<ImageProvider>[]) List<ImageProvider> images,
   }) = _Content;
 
-  Content._();
+  const Content._();
 }

@@ -60,17 +60,16 @@ class UniqueContentsController extends StateNotifier<UniqueContentsState>
     return newUniqueContent.id;
   }
 
-  void updateContent(UniqueContent content) {
-    final currentState = state;
-    final clone = currentState.contents.map<UniqueContent>((e) {
-      if (e.id == content.id) {
-        return e.copyWith(content: content.content);
+  void updateContent(UniqueContentId id, Content content) {
+    final clone = state.contents.map<UniqueContent>((e) {
+      if (e.id == id) {
+        return e.copyWith(content: content);
       } else {
         return e;
       }
     }).toList();
 
-    state = currentState.copyWith(contents: clone);
+    state = state.copyWith(contents: clone);
   }
 
   void delete(UniqueContentId uniqueContentId) {
