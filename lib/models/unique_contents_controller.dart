@@ -13,8 +13,7 @@ final uniqueContentsProvider =
   (ref) => UniqueContentsController(),
 );
 
-class UniqueContentsController extends StateNotifier<UniqueContentsState>
-    with LocatorMixin {
+class UniqueContentsController extends StateNotifier<UniqueContentsState> {
   UniqueContentsController() : super(UniqueContentsState());
 
   UniqueContentId add(Content content) {
