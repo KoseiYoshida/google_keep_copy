@@ -17,33 +17,6 @@ class UniqueContentsController extends StateNotifier<UniqueContentsState>
     with LocatorMixin {
   UniqueContentsController() : super(UniqueContentsState());
 
-  @override
-  void initState() async {
-    super.initState();
-
-    // Load中状態を追加したら、使う。
-    // await Future<void>.delayed(const Duration(seconds: 3));
-
-    // TODO(Kosei): ProviderScopeのところで、overrideValueを使って初期データを挿入する。
-    state = UniqueContentsState(
-      contents: [
-        for (final num in range(1, 5))
-          UniqueContent(
-            id: UniqueContentId.generate(),
-            content: Content(
-              title: 'Title$num',
-              text: 'text$num',
-              images: [
-                const AssetImage('assets/monkey.jpg'),
-                const AssetImage('assets/monkey.jpg'),
-                const AssetImage('assets/monkey.jpg'),
-              ],
-            ),
-          )
-      ],
-    );
-  }
-
   UniqueContentId add(Content content) {
     final newUniqueContent = UniqueContent(
       id: UniqueContentId.generate(),
