@@ -13,6 +13,7 @@ class EditContentScreen extends HookWidget {
   final UniqueContentId uniqueContentId;
   final titleTextController = TextEditingController();
   final memoTextController = TextEditingController();
+  ImageProvider? _selectedImage;
 
   @override
   Widget build(BuildContext context) {
@@ -23,17 +24,22 @@ class EditContentScreen extends HookWidget {
     titleTextController.text = content.title;
     memoTextController.text = content.text;
 
-    void updateWithImage(ImageProvider newImage) {
+    void updateContent() {
       var title = titleTextController.text;
       var memo = memoTextController.text;
 
       title = title.isNotBlank ? title : '';
       memo = memo.isNotBlank ? memo : '';
 
-      final images = [...content.images, newImage];
+      var images = [...content.images];
+      if (_selectedImage != null) {
+        images.add(_selectedImage!);
+      } else {
+        images = [...content.images];
+      }
+
       final newContent =
           content.copyWith(title: title, text: memo, images: images);
-
       controller.update(newContent);
     }
 
@@ -44,16 +50,7 @@ class EditContentScreen extends HookWidget {
         leading: IconButton(
           icon: const BackButtonIcon(),
           onPressed: () {
-            var title = titleTextController.text;
-            var memo = memoTextController.text;
-
-            title = title.isNotBlank ? title : '';
-            memo = memo.isNotBlank ? memo : '';
-
-            final newContent = content.copyWith(title: title, text: memo);
-
-            controller.update(newContent);
-
+            updateContent();
             Navigator.pop(context);
           },
           tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
@@ -155,7 +152,9 @@ class EditContentScreen extends HookWidget {
                           throw ArgumentError.notNull(imageProvider.toString());
                         }
 
-                        updateWithImage(imageProvider);
+                        _selectedImage = imageProvider;
+                        updateContent();
+                        _selectedImage = null;
                       },
                     );
                   },

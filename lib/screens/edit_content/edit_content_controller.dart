@@ -18,8 +18,11 @@ class EditContentController extends StateNotifier<EditContentState> {
     this._read, {
     required this.id,
   }) : super(EditContentState()) {
+    _uniqueContentsController = _read(uniqueContentsProvider.notifier);
+
+    // 大元のコントローラーの状態を同期させる。
     _uniqueContentsControllerRemoveListener =
-        _read(uniqueContentsProvider.notifier).addListener((contentsState) {
+        _uniqueContentsController.addListener((contentsState) {
       final content = contentsState.uniqueContent(id).content;
       state = state.copyWith(content: content);
     });
@@ -30,13 +33,23 @@ class EditContentController extends StateNotifier<EditContentState> {
 
   final Reader _read;
   final UniqueContentId id;
+  late final UniqueContentsController _uniqueContentsController;
 
   late final VoidCallback _uniqueContentsControllerRemoveListener;
 
   void update(Content newContent) {
-    _read(uniqueContentsProvider.notifier).updateContent(id, newContent);
     // 自信のStateは直接更新しない。
     // UniqueContentsControllerに追従するようにだけイベント登録しているため。
+    _uniqueContentsController.updateContent(id, newContent);
+  }
+
+  void deleteImage(ImageProvider image) {
+    final newImages = state.content.images
+      ..removeWhere((element) => element == image);
+    final currentContent = state.content;
+    final newContent = currentContent.copyWith(images: newImages);
+
+    update(newContent);
   }
 
   @override

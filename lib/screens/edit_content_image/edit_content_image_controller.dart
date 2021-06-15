@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:goggle_keep_copy/models/controllers/unique_contents_controller.dart';
 import 'package:goggle_keep_copy/models/unique_content_id.dart';
+import 'package:goggle_keep_copy/screens/edit_content/edit_content_controller.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'edit_content_image_state.dart';
@@ -18,14 +18,13 @@ class EditContentImageController extends StateNotifier<EditContentImageState> {
     this._read, {
     required this.id,
   }) : super(EditContentImageState()) {
-    _uniqueContentsControllerRemoveListener =
-        _read(uniqueContentsProvider.notifier).addListener((contentsState) {
-      final images = contentsState.uniqueContent(id).content.images;
-      state.copyWith(images: images);
+    _editContentControllerRemoveListener =
+        _read(editContentProvider(id).notifier).addListener((contentsState) {
+      final images = contentsState.content.images;
+      state = state.copyWith(images: images);
     });
 
-    final images =
-        _read(uniqueContentsProvider).uniqueContent(id).content.images;
+    final images = _read(editContentProvider(id)).content.images;
     state = state.copyWith(
       images: images,
     );
@@ -34,7 +33,7 @@ class EditContentImageController extends StateNotifier<EditContentImageState> {
   final Reader _read;
   final UniqueContentId id;
 
-  late final VoidCallback _uniqueContentsControllerRemoveListener;
+  late final VoidCallback _editContentControllerRemoveListener;
 
   void toNext() {
     final nextIndex = state.currentImageIndex;
@@ -60,7 +59,7 @@ class EditContentImageController extends StateNotifier<EditContentImageState> {
 
   // 特定のイメージを削除する。
   void delete(ImageProvider image) {
-    _read(uniqueContentsProvider.notifier).deleteImage(id, image);
+    _read(editContentProvider(id).notifier).deleteImage(image);
   }
 
   void deleteCurrent() {
@@ -73,7 +72,7 @@ class EditContentImageController extends StateNotifier<EditContentImageState> {
 
   @override
   void dispose() {
-    _uniqueContentsControllerRemoveListener();
+    _editContentControllerRemoveListener();
 
     super.dispose();
   }
