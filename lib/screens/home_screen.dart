@@ -1,40 +1,35 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:goggle_keep_copy/components/content_tile.dart';
 import 'package:goggle_keep_copy/models/content.dart';
-import 'package:goggle_keep_copy/screens/edit_content_screen.dart';
+import 'package:goggle_keep_copy/models/controllers/unique_contents_controller.dart';
+import 'package:goggle_keep_copy/models/unique_content_id.dart';
+import 'package:goggle_keep_copy/models/unique_content.dart';
+import 'package:goggle_keep_copy/screens/edit_content/edit_content_screen.dart';
 import 'package:goggle_keep_copy/services/image_file_loader.dart';
-import 'package:quiver/iterables.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class HomeScreen extends StatefulWidget {
-  @override
-  _HomeScreenState createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  List<Content> contents = [
-    for (final num in range(1, 5))
-      Content(
-        title: 'title$num',
-        text: 'text$num',
-      )
-  ];
-
-  Future<Content> openContentEditPage(Content passedContent) async {
-    return Navigator.push<Content>(
-      context,
-      MaterialPageRoute(
-        builder: (_) {
-          return EditContentScreen(
-            content: passedContent,
-          );
-        },
-      ),
-    );
-  }
-
+class HomeScreen extends HookWidget {
   @override
   Widget build(BuildContext context) {
+    void _openContentEditPage(UniqueContentId id) {
+      Navigator.push<UniqueContent>(
+        context,
+        MaterialPageRoute(
+          builder: (_) {
+            return EditContentScreen(
+              uniqueContentId: id,
+            );
+          },
+        ),
+      );
+    }
+
+    final contents =
+        useProvider(uniqueContentsProvider.select((value) => value.contents));
+    final controller = useProvider(uniqueContentsProvider.notifier);
+
     return SafeArea(
       child: Scaffold(
         body: Column(
@@ -72,17 +67,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   childAspectRatio: 0.5,
                 ),
                 itemBuilder: (context, index) {
-                  final tile = ContentTile(content: contents[index]);
+                  final tile = ContentTile(
+                    content: contents[index].content,
+                  );
                   return GestureDetector(
-                    onTap: () async {
-                      final editedContent =
-                          await openContentEditPage(contents[index]);
-
-                      if (editedContent != null) {
-                        setState(() {
-                          contents[index] = editedContent;
-                        });
-                      }
+                    onTap: () {
+                      _openContentEditPage(contents[index].id);
                     },
                     child: tile,
                   );
@@ -156,7 +146,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                     );
 
-                    File selectedFile;
+                    File? selectedFile;
 
                     switch (selected) {
                       case 1:
@@ -171,17 +161,15 @@ class _HomeScreenState extends State<HomeScreen> {
                     }
 
                     if (selectedFile != null) {
-                      final newContent = Content()
-                        ..imageProviders = [FileImage(selectedFile)];
+                      final newContent = Content(
+                        title: '',
+                        text: '',
+                        images: [FileImage(selectedFile)],
+                      );
 
-                      final editedContent =
-                          await openContentEditPage(newContent);
+                      final id = controller.add(newContent);
 
-                      if (editedContent != null) {
-                        setState(() {
-                          contents.add(editedContent);
-                        });
-                      }
+                      _openContentEditPage(id);
                     }
                   },
                 ),
@@ -192,14 +180,15 @@ class _HomeScreenState extends State<HomeScreen> {
         floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.white,
-          onPressed: () async {
-            final createdContent = await openContentEditPage(Content());
+          onPressed: () {
+            final newContent = Content(
+              title: '',
+              text: '',
+            );
 
-            if (createdContent != null) {
-              setState(() {
-                contents.add(createdContent);
-              });
-            }
+            final id = controller.add(newContent);
+
+            _openContentEditPage(id);
           },
           child: const Icon(
             Icons.add,

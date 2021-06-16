@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:goggle_keep_copy/models/content.dart';
 
 class ContentTile extends StatelessWidget {
-  const ContentTile({this.content});
+  const ContentTile({required this.content});
 
   final Content content;
 
@@ -21,7 +21,7 @@ class ContentTile extends StatelessWidget {
           children: [
             Container(
               child: Row(
-                children: content.imageProviders.map((imageProvider) {
+                children: content.images.map((imageProvider) {
                   return Expanded(
                     child: Image(image: imageProvider),
                   );

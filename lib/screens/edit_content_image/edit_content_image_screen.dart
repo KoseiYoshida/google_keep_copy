@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:goggle_keep_copy/models/unique_content_id.dart';
+import 'package:goggle_keep_copy/screens/edit_content_image/edit_content_image_controller.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 enum _Menu {
   extractTexts,
@@ -6,31 +11,20 @@ enum _Menu {
   delete,
 }
 
-class EditContentImageScreen extends StatefulWidget {
-  const EditContentImageScreen({
-    this.imageProviders,
-    this.shownImageIndex,
+class EditContentImageScreen extends HookWidget {
+  EditContentImageScreen({
+    required this.id,
+    this.shownImageIndex = 0,
   });
 
-  final List<ImageProvider> imageProviders;
+  final UniqueContentId id;
   final int shownImageIndex;
 
   @override
-  _EditContentImageScreenState createState() => _EditContentImageScreenState();
-}
-
-class _EditContentImageScreenState extends State<EditContentImageScreen> {
-  int _shownImageIndex = 0;
-
-  @override
-  void initState() {
-    _shownImageIndex = widget.shownImageIndex;
-
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final controller = useProvider(editContentImageProvider(id).notifier);
+    // controller.open(shownImageIndex);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.grey.shade200,
@@ -43,7 +37,7 @@ class _EditContentImageScreenState extends State<EditContentImageScreen> {
           },
         ),
         title: Text(
-          '${_shownImageIndex + 1}/${widget.imageProviders.length}',
+          '${controller.currentIndex + 1}/${controller.length}',
           style: const TextStyle(
             color: Colors.black,
             fontSize: 18,
@@ -90,7 +84,8 @@ class _EditContentImageScreenState extends State<EditContentImageScreen> {
                     case 1:
                       break;
                     case 2:
-                      Navigator.pop(context, _shownImageIndex);
+                      controller.deleteCurrent();
+                      Navigator.pop(context);
                       break;
                     default:
                       throw UnsupportedError('$selected is not supported}');
@@ -104,20 +99,21 @@ class _EditContentImageScreenState extends State<EditContentImageScreen> {
         ],
       ),
       body: ImagePageView(
-        imageProviders: widget.imageProviders,
+        imageProviders: useProvider(
+            editContentImageProvider(id).select((value) => value.images)),
         onPageChanged: (value) {
-          setState(() {
-            _shownImageIndex = value;
-          });
+          controller.open(value);
         },
-        initialPage: _shownImageIndex,
+        initialPage: controller.currentIndex,
       ),
     );
   }
 }
 
 class ImageEditPopupMenu extends StatelessWidget {
-  const ImageEditPopupMenu({this.onSelected});
+  const ImageEditPopupMenu({
+    required this.onSelected,
+  });
 
   final Function(_Menu) onSelected;
 
@@ -145,8 +141,8 @@ class ImageEditPopupMenu extends StatelessWidget {
 
 class ImagePageView extends StatelessWidget {
   const ImagePageView({
-    this.imageProviders,
-    this.onPageChanged,
+    required this.imageProviders,
+    required this.onPageChanged,
     this.initialPage = 0,
   });
 
@@ -157,6 +153,7 @@ class ImagePageView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = PageController(initialPage: initialPage);
+
     return PageView(
       scrollDirection: Axis.horizontal,
       controller: controller,
