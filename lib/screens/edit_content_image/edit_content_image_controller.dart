@@ -40,8 +40,7 @@ class EditContentImageController extends StateNotifier<EditContentImageState> {
     if (nextIndex == state.images.length - 1) {
       return;
     }
-
-    state = state.copyWith(currentImageIndex: nextIndex);
+    state = state.copyWith(currentImageIndex: nextIndex + 1);
   }
 
   void toPrev() {
@@ -50,7 +49,7 @@ class EditContentImageController extends StateNotifier<EditContentImageState> {
       return;
     }
 
-    state = state.copyWith(currentImageIndex: prevIndex);
+    state = state.copyWith(currentImageIndex: prevIndex - 1);
   }
 
   void open(int index) {
