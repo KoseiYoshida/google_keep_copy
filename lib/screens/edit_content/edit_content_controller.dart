@@ -44,7 +44,7 @@ class EditContentController extends StateNotifier<EditContentState> {
   }
 
   void deleteImage(ImageProvider image) {
-    final newImages = state.content.images
+    final newImages = List<ImageProvider>.from(state.content.images)
       ..removeWhere((element) => element == image);
     final currentContent = state.content;
     final newContent = currentContent.copyWith(images: newImages);
