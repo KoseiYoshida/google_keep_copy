@@ -1,5 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:goggle_keep_copy/models/content.dart';
 import 'package:goggle_keep_copy/models/controllers/unique_contents_controller.dart';
 import 'package:goggle_keep_copy/models/unique_content.dart';
@@ -18,101 +17,151 @@ class _UniqueContentsRepositoryFake implements UniqueContentsRepository {
 
   bool _hasSaved = false;
   bool get hasSaved => _hasSaved;
+  List<UniqueContent> savedContents = [];
 
   @override
   Future<void> saveUniqueContents(List<UniqueContent> uniqueContents) async {
     _hasSaved = true;
+    savedContents = uniqueContents;
   }
 }
 
 void main() {
-  late ProviderContainer container;
-  late _UniqueContentsRepositoryFake fakeRepository;
+  group('UniqueContentsController', () {
+    late ProviderContainer container;
+    late _UniqueContentsRepositoryFake fakeRepository;
 
-  setUp(() async {
-    fakeRepository = _UniqueContentsRepositoryFake();
+    setUp(() async {
+      fakeRepository = _UniqueContentsRepositoryFake();
 
-    container = ProviderContainer(
-      overrides: [
-        uniqueContentsRepositoryProvider
-            .overrideWithProvider(Provider.autoDispose((ref) => fakeRepository))
-      ],
-    );
-  });
+      container = ProviderContainer(
+        overrides: [
+          uniqueContentsRepositoryProvider.overrideWithProvider(
+              Provider.autoDispose((ref) => fakeRepository))
+        ],
+      );
+    });
 
-  // コンストラクタでref.readを渡す必要がある。
-  // ref.readでFakeのRepositoryを取得できるようにしたい。。
+    group('add', () {
+      test('correct content added', () async {
+        final target = UniqueContentsController(container.read);
+        const content = Content(
+          title: 'title',
+          text: 'text',
+        );
 
-  test('add', () async {
-    final target = UniqueContentsController(container.read);
-    final repository = container.read(uniqueContentsRepositoryProvider);
+        expect(target.debugState.contents, isEmpty);
 
-    expect(target.debugState.contents, isEmpty);
-    expect(fakeRepository._hasSaved, isFalse);
+        final _ = target.add(content);
 
-    const content = Content(
-      title: 'title',
-      text: 'text',
-    );
+        expect(target.debugState.contents.length, 1);
+        final addedContent = target.debugState.contents.first;
+        expect(addedContent.content, content);
+      });
 
-    final id = target.add(content);
-    expect(id, isNotNull);
+      test('saved', () async {
+        final target = UniqueContentsController(container.read);
+        const content = Content(
+          title: 'title',
+          text: 'text',
+        );
 
-    expect(target.debugState.contents.length, 1);
-    final addedContent = target.debugState.contents.first;
-    expect(addedContent.content, content);
+        expect(fakeRepository._hasSaved, isFalse);
 
-    expect(fakeRepository._hasSaved, isTrue);
-  });
+        final _ = target.add(content);
 
-  test('updateContent', () async {
-    final target = UniqueContentsController(container.read);
+        expect(fakeRepository._hasSaved, isTrue);
+      });
+    });
 
-    expect(target.debugState.contents, isEmpty);
-    expect(fakeRepository._hasSaved, isFalse);
+    group('updateContent', () {
+      test('update correctly', () async {
+        final target = UniqueContentsController(container.read);
+        const content = Content(
+          title: 'title',
+          text: 'text',
+        );
+        const newTitle = 'NewTitle';
+        const newText = 'NewText';
+        const newContent = Content(
+          title: newTitle,
+          text: newText,
+        );
 
-    const content = Content(
-      title: 'title',
-      text: 'text',
-    );
+        final id = target.add(content);
+        final beforeUpdate = target.debugState.contents.first.content;
+        expect(beforeUpdate, content);
 
-    final id = target.add(content);
+        target.updateContent(id, newContent);
+        final afterUpdate = target.debugState.contents.first.content;
+        expect(afterUpdate, newContent);
+      });
 
-    const newTitle = 'NewTitle';
-    const newText = 'NewText';
-    const newContent = Content(
-      title: newTitle,
-      text: newText,
-    );
+      test('saved', () async {
+        final target = UniqueContentsController(container.read);
+        const content = Content(
+          title: 'title',
+          text: 'text',
+        );
+        const newTitle = 'NewTitle';
+        const newText = 'NewText';
+        const newContent = Content(
+          title: newTitle,
+          text: newText,
+        );
 
-    target.updateContent(id, newContent);
+        final id = target.add(content);
+        expect(fakeRepository.savedContents.first.content, isNot(newContent));
 
-    expect(target.debugState.contents.length, 1);
-    final updatedContent = target.debugState.contents.first;
+        target.updateContent(id, newContent);
 
-    expect(updatedContent.content, newContent);
+        expect(fakeRepository.savedContents.first.content, newContent);
+      });
+    });
 
-    expect(fakeRepository._hasSaved, isTrue);
-  });
+    group('delete', () {
+      test('correct content deleted', () async {
+        final target = UniqueContentsController(container.read);
+        const content = Content(
+          title: 'title',
+          text: 'text',
+        );
+        const content2 = Content(
+          title: 'title2',
+          text: 'text2',
+        );
 
-  test('delete', () async {
-    final target = UniqueContentsController(container.read);
+        final id = target.add(content);
+        final id2 = target.add(content2);
 
-    expect(target.debugState.contents, isEmpty);
-    expect(fakeRepository._hasSaved, isFalse);
+        expect(target.debugState.contents.length, 2);
+        expect(target.debugState.contents.map((e) => e.content).toList(),
+            contains(content2));
 
-    const content = Content(
-      title: 'title',
-      text: 'text',
-    );
+        target.delete(id2);
 
-    final id = target.add(content);
-    expect(target.debugState.contents.length, 1);
+        expect(target.debugState.contents.length, 1);
+        expect(target.debugState.contents.map((e) => e.content).toList(),
+            isNot(contains(content2)));
+      });
 
-    target.delete(id);
+      test('saved', () async {
+        final target = UniqueContentsController(container.read);
+        const content = Content(
+          title: 'title',
+          text: 'text',
+        );
 
-    expect(target.debugState.contents.length, 0);
+        final id = target.add(content);
 
-    expect(fakeRepository._hasSaved, isTrue);
+        expect(fakeRepository.savedContents.map((e) => e.content).toList(),
+            contains(content));
+
+        target.delete(id);
+
+        expect(fakeRepository.savedContents.map((e) => e.content).toList(),
+            isNot(contains(content)));
+      });
+    });
   });
 }
