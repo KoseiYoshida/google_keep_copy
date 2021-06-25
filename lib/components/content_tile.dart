@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:goggle_keep_copy/models/content.dart';
 
@@ -21,9 +22,9 @@ class ContentTile extends StatelessWidget {
           children: [
             Container(
               child: Row(
-                children: content.images.map((imageProvider) {
+                children: content.imagePaths.map((path) {
                   return Expanded(
-                    child: Image(image: imageProvider),
+                    child: Image.file(File(path)),
                   );
                 }).toList(),
               ),

@@ -8,7 +8,7 @@ part 'edit_content_image_state.freezed.dart';
 abstract class EditContentImageState with _$EditContentImageState {
   factory EditContentImageState({
     @Default(0) int currentImageIndex,
-    @Default(<ImageProvider>[]) List<ImageProvider> images,
+    @Default(<String>[]) List<String> imagePaths,
   }) = _EditContentImageState;
 
   EditContentImageState._();

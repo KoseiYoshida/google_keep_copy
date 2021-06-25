@@ -14,12 +14,17 @@ final uniqueContentsProvider =
 
 class UniqueContentsController extends StateNotifier<UniqueContentsState> {
   UniqueContentsController(this._read) : super(UniqueContentsState()) {
-    _read(uniqueContentsRepositoryProvider)
-        .loadUniqueContents()
-        .then((value) => state = state.copyWith(contents: value));
+    _loadState();
   }
 
   final Reader _read;
+
+  Future<void> _loadState() async {
+    final loadedContents =
+        await _read(uniqueContentsRepositoryProvider).loadUniqueContents();
+
+    state = state.copyWith(contents: loadedContents, isLoading: false);
+  }
 
   UniqueContentId add(Content content) {
     final newUniqueContent = UniqueContent(

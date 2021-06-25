@@ -146,7 +146,7 @@ class HomeScreen extends HookWidget {
                       },
                     );
 
-                    File? selectedFile;
+                    String? selectedFilePath;
 
                     switch (selected) {
                       case 1:
@@ -154,17 +154,17 @@ class HomeScreen extends HookWidget {
                         break;
                       case 2:
                         final loader = ImageFileLoader();
-                        selectedFile = await loader.getImageFromStorage();
+                        selectedFilePath = await loader.getImageFromStorage();
                         break;
                       default:
                         throw ArgumentError.value(selected);
                     }
 
-                    if (selectedFile != null) {
+                    if (selectedFilePath != null) {
                       final newContent = Content(
                         title: '',
                         text: '',
-                        images: [FileImage(selectedFile)],
+                        imagePaths: [selectedFilePath],
                       );
 
                       final id = controller.add(newContent);

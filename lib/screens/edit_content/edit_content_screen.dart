@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:goggle_keep_copy/models/unique_content_id.dart';
@@ -13,7 +15,7 @@ class EditContentScreen extends HookWidget {
   final UniqueContentId uniqueContentId;
   final titleTextController = TextEditingController();
   final memoTextController = TextEditingController();
-  ImageProvider? _selectedImage;
+  String? _selectedImage;
 
   @override
   Widget build(BuildContext context) {
@@ -31,15 +33,15 @@ class EditContentScreen extends HookWidget {
       title = title.isNotBlank ? title : '';
       memo = memo.isNotBlank ? memo : '';
 
-      var images = [...content.images];
+      var imagePaths = [...content.imagePaths];
       if (_selectedImage != null) {
-        images.add(_selectedImage!);
+        imagePaths.add(_selectedImage!);
       } else {
-        images = [...content.images];
+        imagePaths = [...content.imagePaths];
       }
 
       final newContent =
-          content.copyWith(title: title, text: memo, images: images);
+          content.copyWith(title: title, text: memo, imagePaths: imagePaths);
       controller.update(newContent);
     }
 
@@ -82,10 +84,10 @@ class EditContentScreen extends HookWidget {
             children: [
               Container(
                 child: Row(
-                  children: content.images.asMap().entries.map(
+                  children: content.imagePaths.asMap().entries.map(
                     (entry) {
                       final index = entry.key;
-                      final imageProvider = entry.value;
+                      final imagePath = entry.value;
                       return Expanded(
                         child: GestureDetector(
                           onTap: () {
@@ -101,7 +103,7 @@ class EditContentScreen extends HookWidget {
                               ),
                             );
                           },
-                          child: Image(image: imageProvider),
+                          child: Image.file(File(imagePath)),
                         ),
                       );
                     },
@@ -147,12 +149,12 @@ class EditContentScreen extends HookWidget {
                   context: context,
                   builder: (context) {
                     return ContentSelectionSheet(
-                      onSelectImage: (imageProvider) {
-                        if (imageProvider == null) {
-                          throw ArgumentError.notNull(imageProvider.toString());
+                      onSelectImage: (imagePath) {
+                        if (imagePath == null) {
+                          throw ArgumentError.notNull(imagePath);
                         }
 
-                        _selectedImage = imageProvider;
+                        _selectedImage = imagePath;
                         updateContent();
                         _selectedImage = null;
                       },
@@ -185,7 +187,7 @@ class ContentSelectionSheet extends StatelessWidget {
     required this.onSelectImage,
   });
 
-  final Function(ImageProvider?) onSelectImage;
+  final Function(String?) onSelectImage;
 
   @override
   Widget build(BuildContext context) {
@@ -201,9 +203,9 @@ class ContentSelectionSheet extends StatelessWidget {
           title: const Text('画像を追加'),
           onTap: () async {
             final loader = ImageFileLoader();
-            final file = await loader.getImageFromStorage();
-            if (file != null) {
-              onSelectImage(FileImage(file));
+            final filePath = await loader.getImageFromStorage();
+            if (filePath != null) {
+              onSelectImage(filePath);
             }
           },
         ),

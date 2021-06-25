@@ -1,6 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:uuid/uuid.dart';
 
 class UniqueContentId {
+  UniqueContentId._(this.id);
+
   UniqueContentId.generate() : id = _generateUuid();
 
   final String id;
@@ -24,4 +27,9 @@ class UniqueContentId {
     return identical(this, other) ||
         (other is UniqueContentId && other.id == id);
   }
+
+  Map<String, dynamic> toJson() => <String, dynamic>{'id': id};
+
+  UniqueContentId.fromJson(Map<String, dynamic> json)
+      : id = json['id'] as String;
 }

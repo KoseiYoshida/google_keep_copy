@@ -17,9 +17,11 @@ class _$UniqueContentsStateTearOff {
   const _$UniqueContentsStateTearOff();
 
   _UniqueContentsState call(
-      {List<UniqueContent> contents = const <UniqueContent>[]}) {
+      {List<UniqueContent> contents = const <UniqueContent>[],
+      bool isLoading = true}) {
     return _UniqueContentsState(
       contents: contents,
+      isLoading: isLoading,
     );
   }
 }
@@ -30,6 +32,7 @@ const $UniqueContentsState = _$UniqueContentsStateTearOff();
 /// @nodoc
 mixin _$UniqueContentsState {
   List<UniqueContent> get contents => throw _privateConstructorUsedError;
+  bool get isLoading => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $UniqueContentsStateCopyWith<UniqueContentsState> get copyWith =>
@@ -41,7 +44,7 @@ abstract class $UniqueContentsStateCopyWith<$Res> {
   factory $UniqueContentsStateCopyWith(
           UniqueContentsState value, $Res Function(UniqueContentsState) then) =
       _$UniqueContentsStateCopyWithImpl<$Res>;
-  $Res call({List<UniqueContent> contents});
+  $Res call({List<UniqueContent> contents, bool isLoading});
 }
 
 /// @nodoc
@@ -56,12 +59,17 @@ class _$UniqueContentsStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object? contents = freezed,
+    Object? isLoading = freezed,
   }) {
     return _then(_value.copyWith(
       contents: contents == freezed
           ? _value.contents
           : contents // ignore: cast_nullable_to_non_nullable
               as List<UniqueContent>,
+      isLoading: isLoading == freezed
+          ? _value.isLoading
+          : isLoading // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -73,7 +81,7 @@ abstract class _$UniqueContentsStateCopyWith<$Res>
           $Res Function(_UniqueContentsState) then) =
       __$UniqueContentsStateCopyWithImpl<$Res>;
   @override
-  $Res call({List<UniqueContent> contents});
+  $Res call({List<UniqueContent> contents, bool isLoading});
 }
 
 /// @nodoc
@@ -90,12 +98,17 @@ class __$UniqueContentsStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object? contents = freezed,
+    Object? isLoading = freezed,
   }) {
     return _then(_UniqueContentsState(
       contents: contents == freezed
           ? _value.contents
           : contents // ignore: cast_nullable_to_non_nullable
               as List<UniqueContent>,
+      isLoading: isLoading == freezed
+          ? _value.isLoading
+          : isLoading // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -104,15 +117,20 @@ class __$UniqueContentsStateCopyWithImpl<$Res>
 
 class _$_UniqueContentsState extends _UniqueContentsState
     with DiagnosticableTreeMixin {
-  _$_UniqueContentsState({this.contents = const <UniqueContent>[]}) : super._();
+  _$_UniqueContentsState(
+      {this.contents = const <UniqueContent>[], this.isLoading = true})
+      : super._();
 
   @JsonKey(defaultValue: const <UniqueContent>[])
   @override
   final List<UniqueContent> contents;
+  @JsonKey(defaultValue: true)
+  @override
+  final bool isLoading;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'UniqueContentsState(contents: $contents)';
+    return 'UniqueContentsState(contents: $contents, isLoading: $isLoading)';
   }
 
   @override
@@ -120,7 +138,8 @@ class _$_UniqueContentsState extends _UniqueContentsState
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('type', 'UniqueContentsState'))
-      ..add(DiagnosticsProperty('contents', contents));
+      ..add(DiagnosticsProperty('contents', contents))
+      ..add(DiagnosticsProperty('isLoading', isLoading));
   }
 
   @override
@@ -129,12 +148,17 @@ class _$_UniqueContentsState extends _UniqueContentsState
         (other is _UniqueContentsState &&
             (identical(other.contents, contents) ||
                 const DeepCollectionEquality()
-                    .equals(other.contents, contents)));
+                    .equals(other.contents, contents)) &&
+            (identical(other.isLoading, isLoading) ||
+                const DeepCollectionEquality()
+                    .equals(other.isLoading, isLoading)));
   }
 
   @override
   int get hashCode =>
-      runtimeType.hashCode ^ const DeepCollectionEquality().hash(contents);
+      runtimeType.hashCode ^
+      const DeepCollectionEquality().hash(contents) ^
+      const DeepCollectionEquality().hash(isLoading);
 
   @JsonKey(ignore: true)
   @override
@@ -144,12 +168,14 @@ class _$_UniqueContentsState extends _UniqueContentsState
 }
 
 abstract class _UniqueContentsState extends UniqueContentsState {
-  factory _UniqueContentsState({List<UniqueContent> contents}) =
+  factory _UniqueContentsState({List<UniqueContent> contents, bool isLoading}) =
       _$_UniqueContentsState;
   _UniqueContentsState._() : super._();
 
   @override
   List<UniqueContent> get contents => throw _privateConstructorUsedError;
+  @override
+  bool get isLoading => throw _privateConstructorUsedError;
   @override
   @JsonKey(ignore: true)
   _$UniqueContentsStateCopyWith<_UniqueContentsState> get copyWith =>

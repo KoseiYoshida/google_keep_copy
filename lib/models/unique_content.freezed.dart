@@ -12,6 +12,10 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
+UniqueContent _$UniqueContentFromJson(Map<String, dynamic> json) {
+  return _UniqueContent.fromJson(json);
+}
+
 /// @nodoc
 class _$UniqueContentTearOff {
   const _$UniqueContentTearOff();
@@ -21,6 +25,10 @@ class _$UniqueContentTearOff {
       id: id,
       content: content,
     );
+  }
+
+  UniqueContent fromJson(Map<String, Object> json) {
+    return UniqueContent.fromJson(json);
   }
 }
 
@@ -32,6 +40,7 @@ mixin _$UniqueContent {
   UniqueContentId get id => throw _privateConstructorUsedError;
   Content get content => throw _privateConstructorUsedError;
 
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
   $UniqueContentCopyWith<UniqueContent> get copyWith =>
       throw _privateConstructorUsedError;
@@ -124,9 +133,12 @@ class __$UniqueContentCopyWithImpl<$Res>
 }
 
 /// @nodoc
-
+@JsonSerializable()
 class _$_UniqueContent extends _UniqueContent with DiagnosticableTreeMixin {
   _$_UniqueContent({required this.id, required this.content}) : super._();
+
+  factory _$_UniqueContent.fromJson(Map<String, dynamic> json) =>
+      _$_$_UniqueContentFromJson(json);
 
   @override
   final UniqueContentId id;
@@ -167,6 +179,11 @@ class _$_UniqueContent extends _UniqueContent with DiagnosticableTreeMixin {
   @override
   _$UniqueContentCopyWith<_UniqueContent> get copyWith =>
       __$UniqueContentCopyWithImpl<_UniqueContent>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$_$_UniqueContentToJson(this);
+  }
 }
 
 abstract class _UniqueContent extends UniqueContent {
@@ -174,6 +191,9 @@ abstract class _UniqueContent extends UniqueContent {
       {required UniqueContentId id,
       required Content content}) = _$_UniqueContent;
   _UniqueContent._() : super._();
+
+  factory _UniqueContent.fromJson(Map<String, dynamic> json) =
+      _$_UniqueContent.fromJson;
 
   @override
   UniqueContentId get id => throw _privateConstructorUsedError;

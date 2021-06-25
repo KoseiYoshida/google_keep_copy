@@ -20,13 +20,13 @@ class EditContentImageController extends StateNotifier<EditContentImageState> {
   }) : super(EditContentImageState()) {
     _editContentControllerRemoveListener =
         _read(editContentProvider(id).notifier).addListener((contentsState) {
-      final images = contentsState.content.images;
-      state = state.copyWith(images: images);
+      final imagePaths = contentsState.content.imagePaths;
+      state = state.copyWith(imagePaths: imagePaths);
     });
 
-    final images = _read(editContentProvider(id)).content.images;
+    final imagePaths = _read(editContentProvider(id)).content.imagePaths;
     state = state.copyWith(
-      images: images,
+      imagePaths: imagePaths,
     );
   }
 
@@ -37,7 +37,7 @@ class EditContentImageController extends StateNotifier<EditContentImageState> {
 
   void toNext() {
     final nextIndex = state.currentImageIndex;
-    if (nextIndex == state.images.length - 1) {
+    if (nextIndex == state.imagePaths.length - 1) {
       return;
     }
     state = state.copyWith(currentImageIndex: nextIndex + 1);
@@ -57,17 +57,17 @@ class EditContentImageController extends StateNotifier<EditContentImageState> {
   }
 
   // 特定のイメージを削除する。
-  void delete(ImageProvider image) {
-    _read(editContentProvider(id).notifier).deleteImage(image);
+  void delete(String imagePath) {
+    _read(editContentProvider(id).notifier).deleteImage(imagePath);
   }
 
   void deleteCurrent() {
-    delete(state.images[state.currentImageIndex]);
+    delete(state.imagePaths[state.currentImageIndex]);
   }
 
   int get currentIndex => state.currentImageIndex;
 
-  int get length => state.images.length;
+  int get length => state.imagePaths.length;
 
   @override
   void dispose() {

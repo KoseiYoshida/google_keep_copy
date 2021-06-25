@@ -1,34 +1,53 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:goggle_keep_copy/models/content.dart';
 import 'package:goggle_keep_copy/models/controllers/unique_contents_controller.dart';
 import 'package:goggle_keep_copy/models/unique_content_id.dart';
+import 'package:goggle_keep_copy/repository/unique_contents_repository.dart';
 import 'package:goggle_keep_copy/screens/edit_content/edit_content_controller.dart';
 import 'package:goggle_keep_copy/screens/edit_content_image/edit_content_image_controller.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../helper/unique_contents_repository_fake.dart';
+
 void main() {
   late ProviderContainer container;
+  late UniqueContentsRepositoryFake fakeRepository;
   late UniqueContentId id;
 
   const content = Content(
     title: 'title',
     text: 'text',
-    images: [
-      NetworkImage('http://exmaple.com'),
-      NetworkImage('http://exmaple2.com'),
-      NetworkImage('http://exmaple3.com'),
+    imagePaths: [
+      'http://exmaple.com',
+      'http://exmaple2.com',
+      'http://exmaple3.com',
     ],
   );
 
   setUp(() async {
     container = ProviderContainer();
-    id = container.read(uniqueContentsProvider.notifier).add(content);
+    fakeRepository = UniqueContentsRepositoryFake();
+    container = ProviderContainer(
+      overrides: [
+        uniqueContentsRepositoryProvider
+            .overrideWithProvider(Provider.autoDispose((ref) => fakeRepository))
+      ],
+    );
+
+    final uniqueContentsController =
+        container.read(uniqueContentsProvider.notifier);
+
+    // Wait for loading
+    await expectLater(
+        uniqueContentsController.stream.map((event) => event.isLoading).first,
+        completion(false));
+
+    id = uniqueContentsController.add(content);
   });
 
   test('initialize', () async {
     final target = container.read(editContentImageProvider(id).notifier);
-    expect(target.debugState.images, orderedEquals(content.images));
+    expect(target.debugState.imagePaths, orderedEquals(content.imagePaths));
   });
 
   test('toNext', () async {
@@ -38,10 +57,10 @@ void main() {
     target.toNext();
     expect(target.debugState.currentImageIndex, 1);
 
-    for (var i = 0; i < content.images.length; i++) {
+    for (var i = 0; i < content.imagePaths.length; i++) {
       target.toNext();
     }
-    expect(target.debugState.currentImageIndex, content.images.length - 1);
+    expect(target.debugState.currentImageIndex, content.imagePaths.length - 1);
   });
 
   test('toPrev', () async {
@@ -71,15 +90,15 @@ void main() {
     final editContentController =
         container.read(editContentProvider(id).notifier);
 
-    final deleteImage = content.images[1];
-    expect(target.debugState.images, contains(deleteImage));
-    expect(
-        editContentController.debugState.content.images, contains(deleteImage));
+    final deleteImage = content.imagePaths[1];
+    expect(target.debugState.imagePaths, contains(deleteImage));
+    expect(editContentController.debugState.content.imagePaths,
+        contains(deleteImage));
 
     target.delete(deleteImage);
 
-    expect(target.debugState.images, isNot(contains(deleteImage)));
-    expect(editContentController.debugState.content.images,
+    expect(target.debugState.imagePaths, isNot(contains(deleteImage)));
+    expect(editContentController.debugState.content.imagePaths,
         isNot(contains(deleteImage)));
   });
 
@@ -90,15 +109,15 @@ void main() {
 
     const index = 1;
     target.open(index);
-    final deleteImage = content.images[index];
-    expect(target.debugState.images, contains(deleteImage));
-    expect(
-        editContentController.debugState.content.images, contains(deleteImage));
+    final deleteImage = content.imagePaths[index];
+    expect(target.debugState.imagePaths, contains(deleteImage));
+    expect(editContentController.debugState.content.imagePaths,
+        contains(deleteImage));
 
     target.deleteCurrent();
 
-    expect(target.debugState.images, isNot(contains(deleteImage)));
-    expect(editContentController.debugState.content.images,
+    expect(target.debugState.imagePaths, isNot(contains(deleteImage)));
+    expect(editContentController.debugState.content.imagePaths,
         isNot(contains(deleteImage)));
   });
 

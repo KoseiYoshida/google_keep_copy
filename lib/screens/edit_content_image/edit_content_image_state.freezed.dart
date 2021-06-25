@@ -17,11 +17,10 @@ class _$EditContentImageStateTearOff {
   const _$EditContentImageStateTearOff();
 
   _EditContentImageState call(
-      {int currentImageIndex = 0,
-      List<ImageProvider<Object>> images = const <ImageProvider>[]}) {
+      {int currentImageIndex = 0, List<String> imagePaths = const <String>[]}) {
     return _EditContentImageState(
       currentImageIndex: currentImageIndex,
-      images: images,
+      imagePaths: imagePaths,
     );
   }
 }
@@ -32,7 +31,7 @@ const $EditContentImageState = _$EditContentImageStateTearOff();
 /// @nodoc
 mixin _$EditContentImageState {
   int get currentImageIndex => throw _privateConstructorUsedError;
-  List<ImageProvider<Object>> get images => throw _privateConstructorUsedError;
+  List<String> get imagePaths => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $EditContentImageStateCopyWith<EditContentImageState> get copyWith =>
@@ -44,7 +43,7 @@ abstract class $EditContentImageStateCopyWith<$Res> {
   factory $EditContentImageStateCopyWith(EditContentImageState value,
           $Res Function(EditContentImageState) then) =
       _$EditContentImageStateCopyWithImpl<$Res>;
-  $Res call({int currentImageIndex, List<ImageProvider<Object>> images});
+  $Res call({int currentImageIndex, List<String> imagePaths});
 }
 
 /// @nodoc
@@ -59,17 +58,17 @@ class _$EditContentImageStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object? currentImageIndex = freezed,
-    Object? images = freezed,
+    Object? imagePaths = freezed,
   }) {
     return _then(_value.copyWith(
       currentImageIndex: currentImageIndex == freezed
           ? _value.currentImageIndex
           : currentImageIndex // ignore: cast_nullable_to_non_nullable
               as int,
-      images: images == freezed
-          ? _value.images
-          : images // ignore: cast_nullable_to_non_nullable
-              as List<ImageProvider<Object>>,
+      imagePaths: imagePaths == freezed
+          ? _value.imagePaths
+          : imagePaths // ignore: cast_nullable_to_non_nullable
+              as List<String>,
     ));
   }
 }
@@ -81,7 +80,7 @@ abstract class _$EditContentImageStateCopyWith<$Res>
           $Res Function(_EditContentImageState) then) =
       __$EditContentImageStateCopyWithImpl<$Res>;
   @override
-  $Res call({int currentImageIndex, List<ImageProvider<Object>> images});
+  $Res call({int currentImageIndex, List<String> imagePaths});
 }
 
 /// @nodoc
@@ -98,17 +97,17 @@ class __$EditContentImageStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object? currentImageIndex = freezed,
-    Object? images = freezed,
+    Object? imagePaths = freezed,
   }) {
     return _then(_EditContentImageState(
       currentImageIndex: currentImageIndex == freezed
           ? _value.currentImageIndex
           : currentImageIndex // ignore: cast_nullable_to_non_nullable
               as int,
-      images: images == freezed
-          ? _value.images
-          : images // ignore: cast_nullable_to_non_nullable
-              as List<ImageProvider<Object>>,
+      imagePaths: imagePaths == freezed
+          ? _value.imagePaths
+          : imagePaths // ignore: cast_nullable_to_non_nullable
+              as List<String>,
     ));
   }
 }
@@ -118,19 +117,19 @@ class __$EditContentImageStateCopyWithImpl<$Res>
 class _$_EditContentImageState extends _EditContentImageState
     with DiagnosticableTreeMixin {
   _$_EditContentImageState(
-      {this.currentImageIndex = 0, this.images = const <ImageProvider>[]})
+      {this.currentImageIndex = 0, this.imagePaths = const <String>[]})
       : super._();
 
   @JsonKey(defaultValue: 0)
   @override
   final int currentImageIndex;
-  @JsonKey(defaultValue: const <ImageProvider>[])
+  @JsonKey(defaultValue: const <String>[])
   @override
-  final List<ImageProvider<Object>> images;
+  final List<String> imagePaths;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'EditContentImageState(currentImageIndex: $currentImageIndex, images: $images)';
+    return 'EditContentImageState(currentImageIndex: $currentImageIndex, imagePaths: $imagePaths)';
   }
 
   @override
@@ -139,7 +138,7 @@ class _$_EditContentImageState extends _EditContentImageState
     properties
       ..add(DiagnosticsProperty('type', 'EditContentImageState'))
       ..add(DiagnosticsProperty('currentImageIndex', currentImageIndex))
-      ..add(DiagnosticsProperty('images', images));
+      ..add(DiagnosticsProperty('imagePaths', imagePaths));
   }
 
   @override
@@ -149,15 +148,16 @@ class _$_EditContentImageState extends _EditContentImageState
             (identical(other.currentImageIndex, currentImageIndex) ||
                 const DeepCollectionEquality()
                     .equals(other.currentImageIndex, currentImageIndex)) &&
-            (identical(other.images, images) ||
-                const DeepCollectionEquality().equals(other.images, images)));
+            (identical(other.imagePaths, imagePaths) ||
+                const DeepCollectionEquality()
+                    .equals(other.imagePaths, imagePaths)));
   }
 
   @override
   int get hashCode =>
       runtimeType.hashCode ^
       const DeepCollectionEquality().hash(currentImageIndex) ^
-      const DeepCollectionEquality().hash(images);
+      const DeepCollectionEquality().hash(imagePaths);
 
   @JsonKey(ignore: true)
   @override
@@ -169,13 +169,13 @@ class _$_EditContentImageState extends _EditContentImageState
 abstract class _EditContentImageState extends EditContentImageState {
   factory _EditContentImageState(
       {int currentImageIndex,
-      List<ImageProvider<Object>> images}) = _$_EditContentImageState;
+      List<String> imagePaths}) = _$_EditContentImageState;
   _EditContentImageState._() : super._();
 
   @override
   int get currentImageIndex => throw _privateConstructorUsedError;
   @override
-  List<ImageProvider<Object>> get images => throw _privateConstructorUsedError;
+  List<String> get imagePaths => throw _privateConstructorUsedError;
   @override
   @JsonKey(ignore: true)
   _$EditContentImageStateCopyWith<_EditContentImageState> get copyWith =>

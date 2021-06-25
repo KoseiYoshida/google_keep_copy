@@ -12,6 +12,10 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
+Content _$ContentFromJson(Map<String, dynamic> json) {
+  return _Content.fromJson(json);
+}
+
 /// @nodoc
 class _$ContentTearOff {
   const _$ContentTearOff();
@@ -19,12 +23,16 @@ class _$ContentTearOff {
   _Content call(
       {String title = '',
       String text = '',
-      List<ImageProvider<Object>> images = const <ImageProvider>[]}) {
+      List<String> imagePaths = const <String>[]}) {
     return _Content(
       title: title,
       text: text,
-      images: images,
+      imagePaths: imagePaths,
     );
+  }
+
+  Content fromJson(Map<String, Object> json) {
+    return Content.fromJson(json);
   }
 }
 
@@ -35,8 +43,9 @@ const $Content = _$ContentTearOff();
 mixin _$Content {
   String get title => throw _privateConstructorUsedError;
   String get text => throw _privateConstructorUsedError;
-  List<ImageProvider<Object>> get images => throw _privateConstructorUsedError;
+  List<String> get imagePaths => throw _privateConstructorUsedError;
 
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
   $ContentCopyWith<Content> get copyWith => throw _privateConstructorUsedError;
 }
@@ -45,7 +54,7 @@ mixin _$Content {
 abstract class $ContentCopyWith<$Res> {
   factory $ContentCopyWith(Content value, $Res Function(Content) then) =
       _$ContentCopyWithImpl<$Res>;
-  $Res call({String title, String text, List<ImageProvider<Object>> images});
+  $Res call({String title, String text, List<String> imagePaths});
 }
 
 /// @nodoc
@@ -60,7 +69,7 @@ class _$ContentCopyWithImpl<$Res> implements $ContentCopyWith<$Res> {
   $Res call({
     Object? title = freezed,
     Object? text = freezed,
-    Object? images = freezed,
+    Object? imagePaths = freezed,
   }) {
     return _then(_value.copyWith(
       title: title == freezed
@@ -71,10 +80,10 @@ class _$ContentCopyWithImpl<$Res> implements $ContentCopyWith<$Res> {
           ? _value.text
           : text // ignore: cast_nullable_to_non_nullable
               as String,
-      images: images == freezed
-          ? _value.images
-          : images // ignore: cast_nullable_to_non_nullable
-              as List<ImageProvider<Object>>,
+      imagePaths: imagePaths == freezed
+          ? _value.imagePaths
+          : imagePaths // ignore: cast_nullable_to_non_nullable
+              as List<String>,
     ));
   }
 }
@@ -84,7 +93,7 @@ abstract class _$ContentCopyWith<$Res> implements $ContentCopyWith<$Res> {
   factory _$ContentCopyWith(_Content value, $Res Function(_Content) then) =
       __$ContentCopyWithImpl<$Res>;
   @override
-  $Res call({String title, String text, List<ImageProvider<Object>> images});
+  $Res call({String title, String text, List<String> imagePaths});
 }
 
 /// @nodoc
@@ -100,7 +109,7 @@ class __$ContentCopyWithImpl<$Res> extends _$ContentCopyWithImpl<$Res>
   $Res call({
     Object? title = freezed,
     Object? text = freezed,
-    Object? images = freezed,
+    Object? imagePaths = freezed,
   }) {
     return _then(_Content(
       title: title == freezed
@@ -111,20 +120,23 @@ class __$ContentCopyWithImpl<$Res> extends _$ContentCopyWithImpl<$Res>
           ? _value.text
           : text // ignore: cast_nullable_to_non_nullable
               as String,
-      images: images == freezed
-          ? _value.images
-          : images // ignore: cast_nullable_to_non_nullable
-              as List<ImageProvider<Object>>,
+      imagePaths: imagePaths == freezed
+          ? _value.imagePaths
+          : imagePaths // ignore: cast_nullable_to_non_nullable
+              as List<String>,
     ));
   }
 }
 
 /// @nodoc
-
+@JsonSerializable()
 class _$_Content extends _Content with DiagnosticableTreeMixin {
   const _$_Content(
-      {this.title = '', this.text = '', this.images = const <ImageProvider>[]})
+      {this.title = '', this.text = '', this.imagePaths = const <String>[]})
       : super._();
+
+  factory _$_Content.fromJson(Map<String, dynamic> json) =>
+      _$_$_ContentFromJson(json);
 
   @JsonKey(defaultValue: '')
   @override
@@ -132,13 +144,13 @@ class _$_Content extends _Content with DiagnosticableTreeMixin {
   @JsonKey(defaultValue: '')
   @override
   final String text;
-  @JsonKey(defaultValue: const <ImageProvider>[])
+  @JsonKey(defaultValue: const <String>[])
   @override
-  final List<ImageProvider<Object>> images;
+  final List<String> imagePaths;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'Content(title: $title, text: $text, images: $images)';
+    return 'Content(title: $title, text: $text, imagePaths: $imagePaths)';
   }
 
   @override
@@ -148,7 +160,7 @@ class _$_Content extends _Content with DiagnosticableTreeMixin {
       ..add(DiagnosticsProperty('type', 'Content'))
       ..add(DiagnosticsProperty('title', title))
       ..add(DiagnosticsProperty('text', text))
-      ..add(DiagnosticsProperty('images', images));
+      ..add(DiagnosticsProperty('imagePaths', imagePaths));
   }
 
   @override
@@ -159,8 +171,9 @@ class _$_Content extends _Content with DiagnosticableTreeMixin {
                 const DeepCollectionEquality().equals(other.title, title)) &&
             (identical(other.text, text) ||
                 const DeepCollectionEquality().equals(other.text, text)) &&
-            (identical(other.images, images) ||
-                const DeepCollectionEquality().equals(other.images, images)));
+            (identical(other.imagePaths, imagePaths) ||
+                const DeepCollectionEquality()
+                    .equals(other.imagePaths, imagePaths)));
   }
 
   @override
@@ -168,27 +181,32 @@ class _$_Content extends _Content with DiagnosticableTreeMixin {
       runtimeType.hashCode ^
       const DeepCollectionEquality().hash(title) ^
       const DeepCollectionEquality().hash(text) ^
-      const DeepCollectionEquality().hash(images);
+      const DeepCollectionEquality().hash(imagePaths);
 
   @JsonKey(ignore: true)
   @override
   _$ContentCopyWith<_Content> get copyWith =>
       __$ContentCopyWithImpl<_Content>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$_$_ContentToJson(this);
+  }
 }
 
 abstract class _Content extends Content {
-  const factory _Content(
-      {String title,
-      String text,
-      List<ImageProvider<Object>> images}) = _$_Content;
+  const factory _Content({String title, String text, List<String> imagePaths}) =
+      _$_Content;
   const _Content._() : super._();
+
+  factory _Content.fromJson(Map<String, dynamic> json) = _$_Content.fromJson;
 
   @override
   String get title => throw _privateConstructorUsedError;
   @override
   String get text => throw _privateConstructorUsedError;
   @override
-  List<ImageProvider<Object>> get images => throw _privateConstructorUsedError;
+  List<String> get imagePaths => throw _privateConstructorUsedError;
   @override
   @JsonKey(ignore: true)
   _$ContentCopyWith<_Content> get copyWith =>

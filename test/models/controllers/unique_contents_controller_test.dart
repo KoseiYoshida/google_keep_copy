@@ -1,38 +1,18 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:goggle_keep_copy/models/content.dart';
 import 'package:goggle_keep_copy/models/controllers/unique_contents_controller.dart';
-import 'package:goggle_keep_copy/models/unique_content.dart';
 import 'package:goggle_keep_copy/repository/unique_contents_repository.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class _UniqueContentsRepositoryFake implements UniqueContentsRepository {
-  bool _hasLoaded = false;
-  bool get hasLoaded => _hasLoaded;
-
-  @override
-  Future<List<UniqueContent>> loadUniqueContents() async {
-    _hasLoaded = true;
-    return <UniqueContent>[];
-  }
-
-  bool _hasSaved = false;
-  bool get hasSaved => _hasSaved;
-  List<UniqueContent> savedContents = [];
-
-  @override
-  Future<void> saveUniqueContents(List<UniqueContent> uniqueContents) async {
-    _hasSaved = true;
-    savedContents = uniqueContents;
-  }
-}
+import '../../helper/unique_contents_repository_fake.dart';
 
 void main() {
   group('UniqueContentsController', () {
     late ProviderContainer container;
-    late _UniqueContentsRepositoryFake fakeRepository;
+    late UniqueContentsRepositoryFake fakeRepository;
 
     setUp(() async {
-      fakeRepository = _UniqueContentsRepositoryFake();
+      fakeRepository = UniqueContentsRepositoryFake();
 
       container = ProviderContainer(
         overrides: [
@@ -66,11 +46,11 @@ void main() {
           text: 'text',
         );
 
-        expect(fakeRepository._hasSaved, isFalse);
+        expect(fakeRepository.hasSaved, isFalse);
 
         final _ = target.add(content);
 
-        expect(fakeRepository._hasSaved, isTrue);
+        expect(fakeRepository.hasSaved, isTrue);
       });
     });
 
