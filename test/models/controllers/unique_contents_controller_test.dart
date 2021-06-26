@@ -20,11 +20,19 @@ void main() {
               Provider.autoDispose((ref) => fakeRepository))
         ],
       );
+
+      final uniqueContentsController =
+          container.read(uniqueContentsProvider.notifier);
+      // Wait for loading
+      await expectLater(
+          uniqueContentsController.stream.map((event) => event.isLoading).first,
+          completion(false));
     });
 
     group('add', () {
       test('correct content added', () async {
-        final target = UniqueContentsController(container.read);
+        final target = container.read(uniqueContentsProvider.notifier);
+
         const content = Content(
           title: 'title',
           text: 'text',
@@ -40,7 +48,7 @@ void main() {
       });
 
       test('saved', () async {
-        final target = UniqueContentsController(container.read);
+        final target = container.read(uniqueContentsProvider.notifier);
         const content = Content(
           title: 'title',
           text: 'text',
@@ -56,7 +64,7 @@ void main() {
 
     group('updateContent', () {
       test('update correctly', () async {
-        final target = UniqueContentsController(container.read);
+        final target = container.read(uniqueContentsProvider.notifier);
         const content = Content(
           title: 'title',
           text: 'text',
@@ -78,7 +86,7 @@ void main() {
       });
 
       test('saved', () async {
-        final target = UniqueContentsController(container.read);
+        final target = container.read(uniqueContentsProvider.notifier);
         const content = Content(
           title: 'title',
           text: 'text',
@@ -101,7 +109,7 @@ void main() {
 
     group('delete', () {
       test('correct content deleted', () async {
-        final target = UniqueContentsController(container.read);
+        final target = container.read(uniqueContentsProvider.notifier);
         const content = Content(
           title: 'title',
           text: 'text',
@@ -126,7 +134,8 @@ void main() {
       });
 
       test('saved', () async {
-        final target = UniqueContentsController(container.read);
+        final target = container.read(uniqueContentsProvider.notifier);
+
         const content = Content(
           title: 'title',
           text: 'text',

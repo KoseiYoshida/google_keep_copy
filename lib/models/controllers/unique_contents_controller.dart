@@ -27,6 +27,8 @@ class UniqueContentsController extends StateNotifier<UniqueContentsState> {
   }
 
   UniqueContentId add(Content content) {
+    _throwIfNowLoading();
+
     final newUniqueContent = UniqueContent(
       id: UniqueContentId.generate(),
       content: content,
@@ -45,6 +47,8 @@ class UniqueContentsController extends StateNotifier<UniqueContentsState> {
   }
 
   void updateContent(UniqueContentId id, Content content) {
+    _throwIfNowLoading();
+
     final clone = state.contents.map<UniqueContent>((e) {
       if (e.id == id) {
         return e.copyWith(content: content);
@@ -59,11 +63,19 @@ class UniqueContentsController extends StateNotifier<UniqueContentsState> {
   }
 
   void delete(UniqueContentId uniqueContentId) {
+    _throwIfNowLoading();
+
     state = state.copyWith(
       contents: state.contents
         ..removeWhere((element) => element.id == uniqueContentId),
     );
 
     _read(uniqueContentsRepositoryProvider).saveUniqueContents(state.contents);
+  }
+
+  void _throwIfNowLoading() {
+    if (state.isLoading) {
+      throw Exception('Cannot modify state until loading completed.');
+    }
   }
 }
