@@ -26,6 +26,8 @@ class UniqueContentsController extends StateNotifier<UniqueContentsState> {
     state = state.copyWith(contents: loadedContents, isLoading: false);
   }
 
+  bool get isLoading => state.isLoading;
+
   UniqueContentId add(Content content) {
     _throwIfNowLoading();
 

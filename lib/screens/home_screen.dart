@@ -58,27 +58,9 @@ class HomeScreen extends HookWidget {
               ),
             ),
             Expanded(
-              child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                  // 画像が大きいとはみ出てしまうので、一旦Aspectで調整
-                  childAspectRatio: 0.5,
-                ),
-                itemBuilder: (context, index) {
-                  final tile = ContentTile(
-                    content: contents[index].content,
-                  );
-                  return GestureDetector(
-                    onTap: () {
-                      _openContentEditPage(contents[index].id);
-                    },
-                    child: tile,
-                  );
-                },
-                itemCount: contents.length,
-              ),
+              child: controller.isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : _GridViewContent(_openContentEditPage),
             ),
           ],
         ),
@@ -197,6 +179,40 @@ class HomeScreen extends HookWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _GridViewContent extends StatelessWidget {
+  _GridViewContent(this.onContentTapped);
+
+  final contents =
+      useProvider(uniqueContentsProvider.select((value) => value.contents));
+
+  final Function(UniqueContentId) onContentTapped;
+
+  @override
+  Widget build(BuildContext context) {
+    return GridView.builder(
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        crossAxisSpacing: 10,
+        mainAxisSpacing: 10,
+        // 画像が大きいとはみ出てしまうので、一旦Aspectで調整
+        childAspectRatio: 0.5,
+      ),
+      itemBuilder: (context, index) {
+        final tile = ContentTile(
+          content: contents[index].content,
+        );
+        return GestureDetector(
+          onTap: () {
+            onContentTapped(contents[index].id);
+          },
+          child: tile,
+        );
+      },
+      itemCount: contents.length,
     );
   }
 }
