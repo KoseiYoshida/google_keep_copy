@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:goggle_keep_copy/components/content_tile.dart';
@@ -26,8 +25,6 @@ class HomeScreen extends HookWidget {
       );
     }
 
-    final contents =
-        useProvider(uniqueContentsProvider.select((value) => value.contents));
     final controller = useProvider(uniqueContentsProvider.notifier);
 
     return SafeArea(
@@ -58,27 +55,9 @@ class HomeScreen extends HookWidget {
               ),
             ),
             Expanded(
-              child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                  // 画像が大きいとはみ出てしまうので、一旦Aspectで調整
-                  childAspectRatio: 0.5,
-                ),
-                itemBuilder: (context, index) {
-                  final tile = ContentTile(
-                    content: contents[index].content,
-                  );
-                  return GestureDetector(
-                    onTap: () {
-                      _openContentEditPage(contents[index].id);
-                    },
-                    child: tile,
-                  );
-                },
-                itemCount: contents.length,
-              ),
+              child: controller.isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : _GridViewContent(_openContentEditPage),
             ),
           ],
         ),
@@ -146,7 +125,7 @@ class HomeScreen extends HookWidget {
                       },
                     );
 
-                    File? selectedFile;
+                    String? selectedFilePath;
 
                     switch (selected) {
                       case 1:
@@ -154,17 +133,17 @@ class HomeScreen extends HookWidget {
                         break;
                       case 2:
                         final loader = ImageFileLoader();
-                        selectedFile = await loader.getImageFromStorage();
+                        selectedFilePath = await loader.getImageFromStorage();
                         break;
                       default:
                         throw ArgumentError.value(selected);
                     }
 
-                    if (selectedFile != null) {
+                    if (selectedFilePath != null) {
                       final newContent = Content(
                         title: '',
                         text: '',
-                        images: [FileImage(selectedFile)],
+                        imagePaths: [selectedFilePath],
                       );
 
                       final id = controller.add(newContent);
@@ -197,6 +176,40 @@ class HomeScreen extends HookWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _GridViewContent extends StatelessWidget {
+  _GridViewContent(this.onContentTapped);
+
+  final contents =
+      useProvider(uniqueContentsProvider.select((value) => value.contents));
+
+  final Function(UniqueContentId) onContentTapped;
+
+  @override
+  Widget build(BuildContext context) {
+    return GridView.builder(
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        crossAxisSpacing: 10,
+        mainAxisSpacing: 10,
+        // 画像が大きいとはみ出てしまうので、一旦Aspectで調整
+        childAspectRatio: 0.5,
+      ),
+      itemBuilder: (context, index) {
+        final tile = ContentTile(
+          content: contents[index].content,
+        );
+        return GestureDetector(
+          onTap: () {
+            onContentTapped(contents[index].id);
+          },
+          child: tile,
+        );
+      },
+      itemCount: contents.length,
     );
   }
 }

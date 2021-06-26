@@ -9,6 +9,7 @@ part 'unique_contents_state.freezed.dart';
 abstract class UniqueContentsState with _$UniqueContentsState {
   factory UniqueContentsState({
     @Default(<UniqueContent>[]) List<UniqueContent> contents,
+    @Default(true) bool isLoading,
   }) = _UniqueContentsState;
 
   UniqueContentsState._();

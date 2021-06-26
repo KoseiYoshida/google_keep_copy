@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -99,8 +101,9 @@ class EditContentImageScreen extends HookWidget {
         ],
       ),
       body: ImagePageView(
-        imageProviders: useProvider(
-            editContentImageProvider(id).select((value) => value.images)),
+        imageProviders: useProvider(editContentImageProvider(id).select(
+                (value) => value.imagePaths.map((e) => FileImage(File(e)))))
+            .toList(),
         onPageChanged: (value) {
           controller.open(value);
         },

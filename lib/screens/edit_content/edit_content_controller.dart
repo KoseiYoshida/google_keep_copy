@@ -43,11 +43,11 @@ class EditContentController extends StateNotifier<EditContentState> {
     _uniqueContentsController.updateContent(id, newContent);
   }
 
-  void deleteImage(ImageProvider image) {
-    final newImages = List<ImageProvider>.from(state.content.images)
-      ..removeWhere((element) => element == image);
+  void deleteImage(String path) {
+    final newImagePaths = List<String>.from(state.content.imagePaths)
+      ..removeWhere((element) => element == path);
     final currentContent = state.content;
-    final newContent = currentContent.copyWith(images: newImages);
+    final newContent = currentContent.copyWith(imagePaths: newImagePaths);
 
     update(newContent);
   }
