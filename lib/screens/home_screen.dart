@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:goggle_keep_copy/components/content_tile.dart';
@@ -26,8 +25,6 @@ class HomeScreen extends HookWidget {
       );
     }
 
-    final contents =
-        useProvider(uniqueContentsProvider.select((value) => value.contents));
     final controller = useProvider(uniqueContentsProvider.notifier);
 
     return SafeArea(
